@@ -33,8 +33,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col font-cairo bg-gray-100 [&>*]:transition-all [&>*]:duration-300 [&_*]:transition-all [&_*]:duration-300`}
       >
-        <Navbar />
-        <div className="mt-20">
+        {/* <Navbar /> */}
+        <div className="">
           {children}
         </div>
       <Footer />

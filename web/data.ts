@@ -111,7 +111,7 @@ export const subscriptions: Subscription[] = [
     type: "student"
   },
   {
-    name: "اشتراك الطلبة",
+    name: "اشتراك الطلاب",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 249,
     type: "student"
