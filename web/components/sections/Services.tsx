@@ -3,17 +3,14 @@ import { subscriptions } from '@/data'
 import Image from 'next/image'
 import { Subscription } from '@/data'
 import placeholder from '@/public/placeholder.png'
+import { PiBowlFoodBold } from "react-icons/pi";
 export default function Services() {
+
   return (
-    <div className='flex flex-col gap-10 items-center'>
-        <div className='flex flex-col items-center justify-center gap-4'>
+    <div className='flex flex-col gap-10 items-center justify-center'>
+        <div className='flex flex-col items-center justify-center gap-10'>
             <h1 className='text-4xl font-extrabold'>تتضمن الاشتراكات</h1>
-            <ul className='list-disc flex flex-col gap-2 text-lg items-start w-full'>
-                <li>تغذية يومية</li>
-                <li>تمرين يومي</li>
-                <li>تمرين يومي</li>
-                <li>تمرين يومي</li>
-            </ul>
+            <ServiceCards />
         </div>
         <hr className='max-w-xl w-full  border-t border-gray-300' />
         <div className='flex flex-col gap-5 items-center'>
@@ -41,6 +38,61 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
                 <p className='text-xs text-gray-500'>{subscription.description}</p>
                 <p className='z-10 text-sm absolute top-3 left-3 font-extrabold p-1 px-4 rounded-md bg-green-500 text-white'>${subscription.price}</p>
                 <button className='text-xl bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md'> اشترك الآن</button>
+            </div>
+        </div>
+    )
+}
+
+function ServiceCards() {
+    return (
+        <div className='flex flex-wrap gap-8 items-center justify-center w-full'>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
+            </div>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
+            </div>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
+            </div>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
+            </div>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
+            </div>
+            {/* box */}
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+                <PiBowlFoodBold className='text-8xl text-green-500' />
+                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                </h2>
+                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                </p>
             </div>
         </div>
     )
