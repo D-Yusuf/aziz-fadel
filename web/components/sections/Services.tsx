@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Subscription } from '@/data'
 import placeholder from '@/public/placeholder.png'
 import { PiBowlFoodBold } from "react-icons/pi";
+import Link from 'next/link'
 export default function Services() {
 
   return (
@@ -37,7 +38,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
                 <h2 className='text-2xl font-bold'>{subscription.name}</h2>
                 <p className='text-xs text-gray-500'>{subscription.description}</p>
                 <p className='z-10 text-sm absolute top-3 left-3 font-extrabold p-1 px-4 rounded-md bg-green-500 text-white'>${subscription.price}</p>
-                <button className='text-xl bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md'> اشترك الآن</button>
+                <Link href={`/subscribe/${subscription.id}`} className='text-xl bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md'> اشترك الآن</Link>
             </div>
         </div>
     )

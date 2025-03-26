@@ -3,27 +3,11 @@ import { subscriptions } from '@/data'
 import Image from 'next/image'
 import { Subscription } from '@/data'
 import placeholder from '@/public/placeholder.png'
-export default function page() {
+export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex flex-col gap-10 items-center h-screen'>
-        <div className='flex flex-col items-center justify-center gap-4'>
-            <h1 className='text-4xl font-extrabold'>تتضمن الاشتراكات</h1>
-            <ul className='list-disc flex flex-col gap-2 text-lg items-start w-full'>
-                <li>تغذية يومية</li>
-                <li>تمرين يومي</li>
-                <li>تمرين يومي</li>
-                <li>تمرين يومي</li>
-            </ul>
-        </div>
-        <hr className='max-w-xl w-full  border-t border-gray-300' />
-        <div className='flex flex-col gap-5 items-center'>
-            <h1 className='text-4xl font-extrabold mb-5'>الاشتراكات المتوفرة</h1>
-            <div className='flex flex-wrap gap-4 items-center justify-center'>
-                {subscriptions.map((subscription) => (
-                    <SubscriptionCard key={subscription.name} subscription={subscription} />
-                ))}
-            </div>
-        </div>
+        {children}
+            
 
     </div>
   )

@@ -7,10 +7,12 @@ export interface Question {
 }
 
 export interface Subscription {
+  id: number;
   name: string;
   description: string;
   price: number;
-  type: 'student' | 'normal';
+  type?: 'عادي' | 'طالب';
+  image: string;
 }
 
 export const questions: Question[] = [
@@ -105,16 +107,20 @@ export const questions: Question[] = [
 
 export const subscriptions: Subscription[] = [
   {
+    id: 1,
     name: "الاشتراك الذهبي",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 399,
-    type: "student"
+    image: "/placeholder.png",
+    type: "عادي"
   },
   {
+    id: 2,
     name: "اشتراك الطلاب",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 249,
-    type: "student"
+    image: "/placeholder.png",
+    type: "طالب"
   },
 
 ];
