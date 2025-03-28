@@ -8,7 +8,7 @@ import Services from "@/components/sections/Services";
 export default function Home() {
   return (
     <>
-    <div className="flex flex-col gap-10 py-10 px-5 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-10 py-8 px-5 max-w-7xl mx-auto">
       <div className="flex flex-col h-screen">
         <Navbar />
         <Main />
