@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/react-phone-number-input": "^3.0.17",
+    "react-phone-number-input": "^3.4.12"
+  }
+}

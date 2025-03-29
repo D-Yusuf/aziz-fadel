@@ -29,9 +29,9 @@ export default function Services() {
 
 function SubscriptionCard({ subscription }: { subscription: Subscription }) {
     return (
-        <div className='flex flex-col relative  shadow-sm text-center rounded-md hover:bg-white '>
+        <div className='flex flex-col relative  shadow-sm text-center rounded-md hover:bg-white p-5'>
 
-                <Image  src={placeholder} alt={subscription.name}  className='w-96 h-40 object-cover rounded-t-md' />
+                <Image  src={placeholder} alt={subscription.name}  className=' h-40 object-cover rounded-md' />
                 
           
             <div className='flex flex-col gap-4 py-5 px-5'>
@@ -48,7 +48,7 @@ function ServiceCards() {
     return (
         <div className='flex flex-wrap gap-8 items-center justify-center w-full'>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>
@@ -56,7 +56,7 @@ function ServiceCards() {
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>
@@ -64,7 +64,7 @@ function ServiceCards() {
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>
@@ -72,7 +72,7 @@ function ServiceCards() {
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>
@@ -80,7 +80,7 @@ function ServiceCards() {
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>
@@ -88,7 +88,7 @@ function ServiceCards() {
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#f5f5f5] px-8 py-18 rounded-md'>
+            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
                 <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
                 </h2>

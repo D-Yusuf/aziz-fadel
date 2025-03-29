@@ -8,8 +8,9 @@ import Services from "@/components/sections/Services";
 export default function Home() {
   return (
     <>
+    <div className="max-w-6xl mx-auto">
     <div className="flex flex-col gap-10 py-8 px-5 max-w-7xl mx-auto">
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col md:h-screen h-fit">
         <Navbar />
         <Main />
       </div>
@@ -20,6 +21,7 @@ export default function Home() {
       <hr className="w-full  border-t border-gray-300" />
       <Faq />
 
+    </div>
     </div>
       <Footer />
     </>

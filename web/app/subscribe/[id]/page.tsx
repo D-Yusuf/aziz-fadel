@@ -53,6 +53,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
     // Add delay before moving to next question
     setTimeout(() => {
       setGender(selectedGender);
+      setAnswers(prev => [...prev, { question: 'الجنس', answer: selectedGender }]);
       updateUrlWithStep(1); // Start with first question after gender selection
     }, 250);
   };
@@ -103,12 +104,15 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
     } else {
       // Handle completion - you can navigate to a summary page or submit answers
       console.log('All questions answered:', answers);
+      localStorage.setItem("package", JSON.stringify(answers))
+      router.push(`/checkout`)
+
     }
   };
 
   if (!gender) {
     return (
-      <div className="min-h-screen max-w-3xl mx-auto p-6">
+      <div className="min-h-screen max-w-2xl mx-auto p-6">
         <Header onPrevious={() => {}} progress={progress} />
 
         <div className=" w-full">
@@ -147,7 +151,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   const currentAnswer = answers.find(a => a.question === currentQuestion.question);
 
   return (
-    <div className="min-h-screen max-w-3xl mx-auto  p-6">
+    <div className="min-h-screen max-w-2xl mx-auto  p-6">
       <Header onPrevious={handlePrevious} progress={progress} />
 
       {/* Question */}
