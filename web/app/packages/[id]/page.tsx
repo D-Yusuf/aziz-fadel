@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { use } from 'react'
 import { subscriptions } from '@/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaArrowRight } from "react-icons/fa";
-export default function page({ params }: { params: { id: string } }) {
-  const id = params.id
+export default function page({params}:{params: Promise<{id: string}>}) {
+  const id = use(params).id
   const subscription = subscriptions.find((subscription) => subscription.id === parseInt(id))
   
   return (

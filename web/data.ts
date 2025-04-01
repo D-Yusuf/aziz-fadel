@@ -21,6 +21,7 @@ export const questions: { male: Question[], female: Question[] } = {
     {
       id: 1,
       question: "ما هو أفضل وقت لممارسة التمارين الرياضية؟ ذكر",
+      
       options: ["الصباح الباكر", "بعد الظهر", "المساء", "الليل"],
       answer: "الصباح الباكر"
     },

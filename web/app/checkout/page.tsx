@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { IoIosArrowDown } from 'react-icons/io';
 import phone from 'phone';
 import { FaArrowRight } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 interface Country {
   code: string;
@@ -31,11 +32,13 @@ export default function CheckoutPage() {
   });
   const [countryImage, setCountryImage] = useState<string>('https://flagcdn.com/24x18/kw.png');
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [phoneError, setPhoneError] = useState<string>('');
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const filteredCountries = countries.filter(country => 
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,6 +61,7 @@ export default function CheckoutPage() {
       setPhoneError('رقم الهاتف غير صحيح');
     } else {
       setPhoneError('');
+      
     }
   }, [formData.countryCode, formData.phone]);
 
@@ -94,6 +98,7 @@ export default function CheckoutPage() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       // Get package data from localStorage
       const packageData = JSON.parse(localStorage.getItem('package') || '[]');
@@ -116,14 +121,19 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert('تم إرسال طلبك بنجاح!');
-        // You can add navigation here if needed
+        // Clear form data from localStorage
+        localStorage.removeItem('package');
+        localStorage.removeItem('userInfo');
+        // Navigate to success page
+        router.push('/success');
       } else {
         alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -300,10 +310,14 @@ export default function CheckoutPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          
-          className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/80 transition-colors text-base font-semibold"
+          disabled={isSubmitting}
+          className={`w-full py-3 rounded-lg transition-colors text-base font-semibold ${
+            isSubmitting 
+              ? 'bg-accent/50 cursor-not-allowed' 
+              : 'bg-accent hover:bg-accent/80'
+          } text-white`}
         >
-          تسجيل
+          {isSubmitting ? 'جاري الإرسال...' : 'تسجيل'}
         </button>
       </form>
     </div>
