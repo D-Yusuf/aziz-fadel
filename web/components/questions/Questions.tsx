@@ -60,7 +60,7 @@ export default function Questions({
   const handleDateChange = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
-      const formattedDate = date.toLocaleDateString('ar-SA', {
+      const formattedDate = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
