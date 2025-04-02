@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { questions } from '@/data';
+import { questions, Question, MultipleChoiceQuestion, TextInputQuestion, MeasurementQuestion, ImageChoiceQuestion } from '@/data';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/questions/Header';
 
@@ -17,17 +17,16 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
+  const [measurements, setMeasurements] = useState<{ height: string; weight: string }>({ height: '', weight: '' });
   const searchParams = useSearchParams();
   const router = useRouter();
   const step = searchParams.get('step');
   
   const currentQuestions = gender ? questions[gender] : [];
-  // Include gender selection in progress calculation
-  const totalSteps = gender ? currentQuestions.length : 1; // 1 for gender selection when no gender selected
+  const totalSteps = gender ? currentQuestions.length : 1;
   const currentStep = gender ? currentQuestionIndex + 1 : 0;
   const progress = (currentStep / totalSteps) * 100;
 
-  // Listen for URL step changes and update the current question index
   useEffect(() => {
     if (step) {
       const stepNum = parseInt(step);
@@ -40,7 +39,6 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
     }
   }, [step, gender, currentQuestions.length]);
 
-  // Update URL with current question step while preserving other query parameters
   const updateUrlWithStep = (newStep: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('step', newStep.toString());
@@ -49,35 +47,63 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setSelectedGender(selectedGender);
-    // Add delay before moving to next question
     setTimeout(() => {
       setGender(selectedGender);
       setAnswers(prev => [...prev, { question: 'الجنس', answer: selectedGender }]);
-      updateUrlWithStep(1); // Start with first question after gender selection
+      updateUrlWithStep(1);
     }, 250);
   };
 
   const handleAnswer = (question: string, answer: string) => {
     setSelectedOption(answer);
     setAnswers(prev => {
-      // Find if we already have an answer for this question
       const existingAnswerIndex = prev.findIndex(a => a.question === question);
       if (existingAnswerIndex >= 0) {
-        // Update existing answer
         const newAnswers = [...prev];
         newAnswers[existingAnswerIndex] = { question, answer };
         return newAnswers;
       }
-      // Add new answer
       return [...prev, { question, answer }];
     });
 
-    // Only add delay for multiple choice questions
-    if (currentQuestion.options) {
+    // Only proceed automatically for multiple choice questions without follow-up
+    if (isMultipleChoiceQuestion(currentQuestion) && !currentQuestion.followUp) {
       setTimeout(() => {
         handleNext();
       }, 250);
     }
+  };
+
+  const handleFollowUpAnswer = (question: string, answer: string) => {
+    setSelectedOption(answer);
+    setAnswers(prev => {
+      const existingAnswerIndex = prev.findIndex(a => a.question === question);
+      if (existingAnswerIndex >= 0) {
+        const newAnswers = [...prev];
+        newAnswers[existingAnswerIndex] = { question, answer };
+        return newAnswers;
+      }
+      return [...prev, { question, answer }];
+    });
+  };
+
+  const handleMeasurementChange = (field: 'height' | 'weight', value: string) => {
+    setMeasurements(prev => ({ ...prev, [field]: value }));
+    setAnswers(prev => {
+      const existingAnswerIndex = prev.findIndex(a => a.question === currentQuestion.question);
+      if (existingAnswerIndex >= 0) {
+        const newAnswers = [...prev];
+        newAnswers[existingAnswerIndex] = { 
+          question: currentQuestion.question, 
+          answer: `${measurements.height}cm / ${measurements.weight}kg` 
+        };
+        return newAnswers;
+      }
+      return [...prev, { 
+        question: currentQuestion.question, 
+        answer: `${measurements.height}cm / ${measurements.weight}kg` 
+      }];
+    });
   };
 
   const handlePrevious = () => {
@@ -86,27 +112,40 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
       setCurrentQuestionIndex(prev => prev - 1);
       updateUrlWithStep(prevStep);
     } else if (gender) {
-      // If we're at the first question, go back to gender selection
       setGender(null);
       updateUrlWithStep(0);
     } else {
-      // If we're at gender selection, go back to packages
       router.push('/');
     }
   };
 
   const handleNext = () => {
     if (currentQuestionIndex < currentQuestions.length - 1) {
-      const nextStep = currentQuestionIndex + 2; // +2 because step 0 is gender
+      const nextStep = currentQuestionIndex + 2;
       setCurrentQuestionIndex(curr => curr + 1);
       updateUrlWithStep(nextStep);
     } else {
-      // Handle completion - you can navigate to a summary page or submit answers
       console.log('All questions answered:', answers);
-      localStorage.setItem("package", JSON.stringify(answers))
-      router.push(`/checkout`)
-
+      localStorage.setItem("package", JSON.stringify(answers));
+      router.push(`/checkout`);
     }
+  };
+
+  // Type guards for question types
+  const isMultipleChoiceQuestion = (question: Question): question is MultipleChoiceQuestion => {
+    return question.type === 'multiple-choice';
+  };
+
+  const isTextInputQuestion = (question: Question): question is TextInputQuestion => {
+    return question.type === 'text-input';
+  };
+
+  const isMeasurementQuestion = (question: Question): question is MeasurementQuestion => {
+    return question.type === 'measurement';
+  };
+
+  const isImageChoiceQuestion = (question: Question): question is ImageChoiceQuestion => {
+    return question.type === 'image-choice';
   };
 
   if (!gender) {
@@ -114,7 +153,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
       <div className="min-h-screen max-w-2xl mx-auto p-6">
         <Header onPrevious={() => {}} progress={progress} />
 
-        <div className=" w-full">
+        <div className="w-full">
           <h2 className="text-2xl font-bold text-right mb-8">
             ما هو جنسك؟
           </h2>
@@ -148,64 +187,157 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
 
   const currentQuestion = currentQuestions[currentQuestionIndex];
   const currentAnswer = answers.find(a => a.question === currentQuestion.question);
+  const followUpQuestion = currentQuestion.followUp;
+  const followUpAnswer = followUpQuestion ? answers.find(a => a.question === followUpQuestion.question) : null;
+  const shouldShowFollowUp = currentAnswer && followUpQuestion;
+
+  const canProceed = () => {
+    if (!currentAnswer?.answer) return false;
+    if (followUpQuestion && !followUpAnswer?.answer) return false;
+    if (isMeasurementQuestion(currentQuestion) && (!measurements.height || !measurements.weight)) return false;
+    return true;
+  };
 
   return (
-    <div className="min-h-screen max-w-2xl mx-auto  p-6">
+    <div className="min-h-screen max-w-2xl mx-auto p-6">
       <Header onPrevious={handlePrevious} progress={progress} />
 
-      {/* Question */}
       <div className="max-w-4xl mx-auto w-full">
         <h2 className="text-2xl font-bold text-right mb-8">
           {currentQuestion.question}
         </h2>
 
-        {/* Options */}
-        <div className="space-y-4 w-full">
-          {currentQuestion.options ? (
-            // Multiple choice question
-            currentQuestion.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  handleAnswer(currentQuestion.question, option);
-                }}
-                className={`w-full p-4 text-right border-2 rounded-lg transition-colors duration-200 ${
-                  selectedOption === option 
-                    ? 'bg-accent text-white border-accent' 
-                    : 'bg-white border-gray-200 hover:border-accent'
-                }`}
-              >
-                {option}
-              </button>
-            ))
-          ) : (
-            // Text input question
-            <div className="w-full">
-              <input
-                type="text"
-                value={currentAnswer?.answer || ''}
-                onChange={(e) => handleAnswer(currentQuestion.question, e.target.value)}
-                placeholder="أدخل إجابتك هنا"
-                className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
-                         focus:border-accent outline-none"
-              />
+        <div className="space-y-6 w-full">
+          {/* Main question */}
+          <div className="space-y-4">
+            {isMultipleChoiceQuestion(currentQuestion) && (
+              currentQuestion.options.map((option: string, index: number) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswer(currentQuestion.question, option)}
+                  className={`w-full p-4 text-right border-2 rounded-lg transition-colors duration-200 ${
+                    currentAnswer?.answer === option 
+                      ? 'bg-accent text-white border-accent' 
+                      : 'bg-white border-gray-200 hover:border-accent'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))
+            )}
+
+            {isTextInputQuestion(currentQuestion) && (
+              <div className="w-full">
+                <textarea
+                  value={currentAnswer?.answer || ''}
+                  onChange={(e) => handleAnswer(currentQuestion.question, e.target.value)}
+                  placeholder="أدخل إجابتك هنا"
+                  rows={4}
+                  className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
+                           focus:border-accent outline-none resize-none"
+                />
+              </div>
+            )}
+
+            {isMeasurementQuestion(currentQuestion) && (
+              <div className="space-y-4">
+                <div className="w-full">
+                  <input
+                    type="text"
+                    value={measurements.height}
+                    onChange={(e) => handleMeasurementChange('height', e.target.value)}
+                    placeholder="الطول (سم)"
+                    className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
+                             focus:border-accent outline-none"
+                  />
+                </div>
+                <div className="w-full">
+                  <input
+                    type="text"
+                    value={measurements.weight}
+                    onChange={(e) => handleMeasurementChange('weight', e.target.value)}
+                    placeholder="الوزن (كجم)"
+                    className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
+                             focus:border-accent outline-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {isImageChoiceQuestion(currentQuestion) && (
+              <div className="space-y-4">
+                <img 
+                  src={currentQuestion.image} 
+                  alt={currentQuestion.question}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                {currentQuestion.options.map((option: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswer(currentQuestion.question, option)}
+                    className={`w-full p-4 text-right border-2 rounded-lg transition-colors duration-200 ${
+                      currentAnswer?.answer === option 
+                        ? 'bg-accent text-white border-accent' 
+                        : 'bg-white border-gray-200 hover:border-accent'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Follow-up question */}
+          {shouldShowFollowUp && (
+            <div className="mt-8 space-y-4">
+              <h3 className="text-xl font-bold text-right mb-4">
+                {followUpQuestion.question}
+              </h3>
+
+              {isMultipleChoiceQuestion(followUpQuestion) && (
+                followUpQuestion.options.map((option: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => handleFollowUpAnswer(followUpQuestion.question, option)}
+                    className={`w-full p-4 text-right border-2 rounded-lg transition-colors duration-200 ${
+                      followUpAnswer?.answer === option 
+                        ? 'bg-accent text-white border-accent' 
+                        : 'bg-white border-gray-200 hover:border-accent'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))
+              )}
+
+              {isTextInputQuestion(followUpQuestion) && (
+                <div className="w-full">
+                  <textarea
+                    value={followUpAnswer?.answer || ''}
+                    onChange={(e) => handleFollowUpAnswer(followUpQuestion.question, e.target.value)}
+                    placeholder="أدخل إجابتك هنا"
+                    rows={4}
+                    className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
+                             focus:border-accent outline-none resize-none"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Next button for text input questions */}
-        {!currentQuestion.options && (
-          <div className="flex justify-start mt-6">
-            <button
-              onClick={handleNext}
-              disabled={!currentAnswer?.answer}
-              className="bg-accent text-white px-8 py-3 rounded-lg hover:bg-accent/80 
-                       disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-            >
-              التالي
-            </button>
-          </div>
-        )}
+        {/* Next button */}
+        <div className="flex justify-start mt-6">
+          <button
+            onClick={handleNext}
+            disabled={!canProceed()}
+            className="bg-accent text-white px-8 py-3 rounded-lg hover:bg-accent/80 
+                     disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          >
+            التالي
+          </button>
+        </div>
       </div>
     </div>
   );

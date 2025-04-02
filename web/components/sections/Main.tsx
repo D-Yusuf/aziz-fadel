@@ -8,6 +8,7 @@ export default function Main() {
       <div dir='ltr' id='main' className='flex md:flex-row flex-col justify-around items-center  gap-4 font-extrabold  my-auto'>
         <div className='relative '>
           <Image className='rounded-xl' src={pose} alt='pose' width={450} />
+          <Image className='rounded-xl' src="https://aziz-fadel.vercel.app/images/Female-Bodies.jpg" alt='pose' width={450} />
           <hr />
         </div>
         <div dir='rtl' className='flex flex-col justify-between gap-10 max-w-3/5 md:text-start text-center h-full'>
