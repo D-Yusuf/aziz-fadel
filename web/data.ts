@@ -4,6 +4,13 @@ export interface BaseQuestion {
   question: string;
 }
 
+// Question with date input
+export interface DateInputQuestion extends BaseQuestion {
+  type: 'date-input';
+  answer: string;
+  followUp?: FollowUpQuestion;
+}
+
 // Question with multiple choice options
 export interface MultipleChoiceQuestion extends BaseQuestion {
   type: 'multiple-choice';
@@ -32,8 +39,9 @@ export interface MeasurementQuestion extends BaseQuestion {
 // Question with image and multiple choice
 export interface ImageChoiceQuestion extends BaseQuestion {
   type: 'image-choice';
-  image: string;
-  options: string[];
+  image?: string;
+  options: { image: string, value: string }[];
+  imageFolder: string;
   answer: string;
   followUp?: FollowUpQuestion;
 }
@@ -43,14 +51,16 @@ export type FollowUpQuestion =
   | MultipleChoiceQuestion 
   | TextInputQuestion 
   | MeasurementQuestion 
-  | ImageChoiceQuestion;
+  | ImageChoiceQuestion
+  | DateInputQuestion;
 
 // Union type for all question types
 export type Question = 
   | MultipleChoiceQuestion 
   | TextInputQuestion 
   | MeasurementQuestion 
-  | ImageChoiceQuestion;
+  | ImageChoiceQuestion
+  | DateInputQuestion;
 
 export interface Subscription {
   id: number;
@@ -115,18 +125,17 @@ export const questions: { male: Question[], female: Question[] } = {
     },
     {
       id: 6,
-      type: 'multiple-choice',
-      question: "كم مرة في الأسبوع يجب ممارسة تمارين القوة؟",
-      options: ["مرة واحدة", "مرتين", "3-4 مرات", "5-6 مرات"],
-      answer: "3-4 مرات"
+      type: 'date-input',
+      question: "تاريخ الميلاد",
+      answer: "٢٠٠٠-٢٠٠٩"
     },
     {
       id: 7,
       type: 'image-choice',
       question: "ما هو أفضل تمرين لحرق الدهون؟",
-      image: "/exercises/cardio.jpg",
-      options: ["تمرين الضغط", "تمرين القفز", "تمرين الجري", "تمرين اليوغا"],
-      answer: "تمرين الجري"
+      options: [{ image: "cardio.png", value: "cardio" }, { image: "jump.png", value: "jump" }, { image: "run.png", value: "run" }, { image: "yoga.png", value: "yoga" }],
+      imageFolder: "/exercises",
+      answer: "run"
     },
     {
       id: 8,
@@ -142,14 +151,14 @@ export const questions: { male: Question[], female: Question[] } = {
       options: ["تمارين القوة", "تمارين التمدد", "تمارين القلب", "تمارين التوازن"],
       answer: "تمارين التمدد"
     },
-    {
-      id: 10,
-      type: 'image-choice',
-      image: "https://aziz-fadel.vercel.app/Female-Bodies.jpg",
-      question: "ما هو أقرب شكل لنسبة الدهون في الجسم لديك؟",
-      options: ["1", "2", "3", "4", "5", "6", "7", "8"],
-      answer: "1"
-    },
+    // { for female section
+    //   id: 10,
+    //   type: 'image-choice',
+    //   question: "ما هو أقرب شكل لنسبة الدهون في الجسم لديك؟",
+    //   options: [{ image: "1.png", value: "1" }, { image: "2.png", value: "2" }, { image: "3.png", value: "3" }, { image: "4.png", value: "4" }, { image: "5.png", value: "5" }, { image: "6.png", value: "6" }, { image: "7.png", value: "7" }, { image: "8.png", value: "8" }],
+    //   imageFolder: "/female",
+    //   answer: "1"
+    // },
     {
       id: 11,
       type: 'text-input',
