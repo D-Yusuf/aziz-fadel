@@ -144,10 +144,11 @@ export const questions: { male: Question[], female: Question[] } = {
     },
     {
       id: 10,
-      type: 'multiple-choice',
-      question: "كم لتر من الماء يجب شربه أثناء التمرين؟",
-      options: ["0.5 لتر", "1 لتر", "2 لتر", "3 لتر"],
-      answer: "1 لتر"
+      type: 'image-choice',
+      image: "https://aziz-fadel.vercel.app/Female-Bodies.jpg",
+      question: "ما هو أقرب شكل لنسبة الدهون في الجسم لديك؟",
+      options: ["1", "2", "3", "4", "5", "6", "7", "8"],
+      answer: "1"
     },
     {
       id: 11,
