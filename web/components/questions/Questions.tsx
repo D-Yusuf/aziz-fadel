@@ -3,6 +3,7 @@ import { Question, MultipleChoiceQuestion, TextInputQuestion, MeasurementQuestio
 import Image from 'next/image';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import '@/styles/datepicker.css';
 
 interface Answer {
   question: string;
@@ -195,134 +196,6 @@ export default function Questions({
 
           {isDateInputQuestion(currentQuestion) && (
             <div className="w-full">
-              <style jsx global>{`
-                .react-datepicker-wrapper {
-                  width: 100%;
-                }
-                .react-datepicker {
-                  font-family: inherit;
-                  border: 2px solid #e5e7eb;
-                  border-radius: 0.75rem;
-                  direction: rtl;
-                  padding: 0.75rem;
-                  background: white;
-                  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                  width: 280px;
-                  font-size: 0.875rem;
-                }
-                .react-datepicker__header {
-                  background-color: white;
-                  border-bottom: none;
-                  padding-top: 0.25rem;
-                }
-                .react-datepicker__current-month {
-                  color: #111827;
-                  font-weight: 600;
-                  font-size: 0.95rem;
-                  margin-bottom: 0.25rem;
-                }
-                .react-datepicker__day-names {
-                  margin-top: 0.25rem;
-                }
-                .react-datepicker__day-name {
-                  color: #6b7280;
-                  font-weight: 500;
-                  width: 2rem;
-                  line-height: 2rem;
-                  margin: 0.1rem;
-                }
-                .react-datepicker__day {
-                  color: #374151;
-                  border-radius: 0.375rem;
-                  margin: 0.1rem;
-                  width: 2rem;
-                  line-height: 2rem;
-                  font-size: 0.875rem;
-                }
-                .react-datepicker__day--selected {
-                  background-color: var(--accent-color);
-                  color: white;
-                  font-weight: 600;
-                }
-                .react-datepicker__day--selected:hover {
-                  background-color: var(--accent-color);
-                }
-                .react-datepicker__day:hover {
-                  background-color: var(--accent-color);
-                  color: white;
-                  border-radius: 0.375rem;
-                }
-                .react-datepicker__day--keyboard-selected {
-                  background-color: var(--accent-color);
-                  color: white;
-                }
-                .react-datepicker__day--outside-month {
-                  color: #9ca3af;
-                }
-                .react-datepicker__input-container input {
-                  width: 100%;
-                  padding: 0.75rem;
-                  text-align: right;
-                  border: 2px solid #e5e7eb;
-                  border-radius: 0.75rem;
-                  outline: none;
-                  transition: all 0.2s;
-                  font-size: 0.875rem;
-                  color: #111827;
-                  background-color: white;
-                }
-                .react-datepicker__input-container input:focus {
-                  border-color: var(--accent-color);
-                  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
-                }
-                .react-datepicker__input-container input::placeholder {
-                  color: #9ca3af;
-                }
-                .react-datepicker-popper {
-                  z-index: 10;
-                }
-                .react-datepicker__year-dropdown {
-                  background-color: white;
-                  border: 2px solid #e5e7eb;
-                  border-radius: 0.75rem;
-                  padding: 0.5rem;
-                  width: 50%;
-                  right: 25%;
-                  font-size: 0.875rem;
-                }
-                .react-datepicker__year-dropdown-container {
-                  text-align: center;
-                }
-                .react-datepicker__year-option {
-                  padding: 0.375rem;
-                  color: #374151;
-                  cursor: pointer;
-                  transition: all 0.2s;
-                }
-                .react-datepicker__year-option:hover {
-                  background-color: var(--accent-color);
-                  color: white;
-                  border-radius: 0.375rem;
-                }
-                .react-datepicker__navigation {
-                  top: 0.75rem;
-                }
-                .react-datepicker__navigation--previous {
-                  left: auto;
-                  right: 0.75rem;
-                  transform: rotate(180deg);
-                }
-                .react-datepicker__navigation--next {
-                  right: auto;
-                  left: 0.75rem;
-                  transform: rotate(180deg);
-                }
-                .react-datepicker__navigation-icon::before {
-                  border-width: 2px 2px 0 0;
-                  height: 8px;
-                  width: 8px;
-                }
-              `}</style>
               <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}

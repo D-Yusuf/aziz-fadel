@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { FaArrowRight } from "react-icons/fa";
 import logo from '@/public/logo.svg'
+import Link from 'next/link';
 interface HeaderProps {
   onPrevious: () => void;
   progress: number;
@@ -17,12 +18,14 @@ export default function Header({ onPrevious, progress }: HeaderProps) {
         >
           <FaArrowRight className="w-6 h-6 text-gray-600" />
         </button>
-        <Image 
-          src={logo}
-          alt="Fadil Logo"
-          width={150}
-          height={50}
-        />
+        <Link href="/">
+          <Image 
+            src={logo}
+            alt="Fadil Logo"
+            width={150}
+            height={50}
+          />
+        </Link>
       </div>
 
       {/* Progress bar */}
