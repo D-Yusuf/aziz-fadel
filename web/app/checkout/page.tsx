@@ -39,6 +39,7 @@ export default function CheckoutPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [previousUrl, setPreviousUrl] = useState('/');
 
   const filteredCountries = countries.filter(country => 
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -55,6 +56,7 @@ export default function CheckoutPage() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
   useEffect(() => {
     const phoneData = phone(formData.countryCode + formData.phone);
     if (!phoneData.isValid) {
@@ -64,6 +66,14 @@ export default function CheckoutPage() {
       
     }
   }, [formData.countryCode, formData.phone]);
+
+  useEffect(() => {
+    // Get the stored URL when component mounts
+    const storedUrl = localStorage.getItem("previousUrl");
+    if (storedUrl) {
+      setPreviousUrl(storedUrl);
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -138,188 +148,195 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen max-w-xl mx-auto p-6 flex flex-col gap-5 ">
-      <div className="flex justify-center relative items-center">
-        <div className="w-8" />
-        <Link href="/" className="text-accent absolute right-0">
-        
-          <FaArrowRight className="w-6 h-6 text-gray-600" />
-        </Link>
-        <h1 className="text-2xl font-bold">تسجيل</h1>
-      </div>
-        
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name Fields */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-lg mb-1 text-right">
-              الاسم الأول <span className="text-accent">*</span>
-            </label>
-            <input
-              type="text"
-              name="firstName"
-              required
-              placeholder="الرجاء إدخال الاسم"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-right text-lg"
-            />
-          </div>
-          <div>
-            <label className="block text-lg mb-1 text-right">
-              اسم العائلة <span className="text-accent">*</span>
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              required
-              placeholder="الرجاء إدخال اسم عائلتك"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-right text-lg"
-            />
-          </div>
+    <div className=" flex flex-col">
+      {/* Header section */}
+      <div className="p-4 md:p-6">
+        <div className="max-w-2xl mx-auto flex justify-center relative items-center">
+          <div className="w-8" />
+          <Link href={previousUrl} className="text-accent absolute right-0">
+            <FaArrowRight className="w-6 h-6 text-gray-600" />
+          </Link>
+          <h1 className="text-2xl md:text-3xl font-bold">ارسال طلب التسجيل</h1>
         </div>
+      </div>
 
-        {/* Phone Number */}
-        <div className="">
-          <label className="block text-lg mb-1 text-right">
-            الهاتف (واتساب) <span className="text-accent">*</span>
-          </label>
-          <div dir="ltr" className="flex gap-2">
-            <div className="relative flex items-center" ref={dropdownRef}>
-              <div className="flex items-center gap-2 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg h-[42px] min-w-[120px]">
-              <button
-                type="button"
-                onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                className=" hover:bg-gray-50"
-              >
-                <IoIosArrowDown 
-                  className={`w-5 h-5 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`}
+      {/* Form section */}
+      <div className="flex-1 flex items-start">
+        <div className="w-full max-w-2xl mx-auto p-4 md:p-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Name Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-lg md:text-xl mb-2 text-right">
+                  الاسم الأول <span className="text-accent">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  required
+                  placeholder="فلان"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-right text-lg md:text-xl"
                 />
-              </button>
-                <img
-                  src={countryImage}
-                  alt="Country flag"
-                  className="w-6 h-4"
-                />
-                <span className="text-lg">{formData.countryCode}</span>
               </div>
-              
-              {isCountryDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-[300px] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  <div className="p-2 border-b">
-                    <input
-                      type="text"
-                      placeholder="ابحث عن الدولة أو الرمز"
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        
-                      }}
-                      className="text-right w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-lg"
+              <div>
+                <label className="block text-lg md:text-xl mb-2 text-right">
+                  اسم العائلة <span className="text-accent">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  required
+                  placeholder="الفلاني"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-right text-lg md:text-xl"
+                />
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-lg md:text-xl mb-2 text-right">
+                الهاتف (واتساب) <span className="text-accent">*</span>
+              </label>
+              <div dir="ltr" className="flex gap-2">
+                <div className="relative flex items-center" ref={dropdownRef}>
+                  <div className="flex items-center gap-2 px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg h-[50px] min-w-[140px]">
+                  <button
+                    type="button"
+                    onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                    className=" hover:bg-gray-50"
+                  >
+                    <IoIosArrowDown 
+                      className={`w-5 h-5 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`}
                     />
+                  </button>
+                    <img
+                      src={countryImage}
+                      alt="Country flag"
+                      className="w-6 h-4"
+                    />
+                    <span className="text-lg">{formData.countryCode}</span>
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto">
-                    {filteredCountries.map((country) => (
-                      <button
-                        key={country.code}
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            countryCode: country.dialCode,
-                            country: country.name
-                          }));
-                          handlePhoneChange(country.dialCode);
-                          setCountryImage(`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`);
-                          setIsCountryDropdownOpen(false);
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50"
-                      >
-                        <img
-                          src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                          srcSet={`https://flagcdn.com/48x36/${country.code.toLowerCase()}.png 2x`}
-                          alt={`${country.name} flag`}
-                          className="w-6 h-4"
+                  
+                  {isCountryDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-[300px] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                      <div className="p-2 border-b">
+                        <input
+                          type="text"
+                          placeholder="ابحث عن الدولة أو الرمز"
+                          value={searchTerm}
+                          onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            
+                          }}
+                          className="text-right w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-lg"
                         />
-                        <span className="text-lg">{country.name}</span>
-                        <span className="text-lg text-gray-500 ml-auto">{country.dialCode}</span>
-                      </button>
-                    ))}
-                  </div>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto">
+                        {filteredCountries.map((country) => (
+                          <button
+                            key={country.code}
+                            type="button"
+                            onClick={() => {
+                              setFormData(prev => ({
+                                ...prev,
+                                countryCode: country.dialCode,
+                                country: country.name
+                              }));
+                              handlePhoneChange(country.dialCode);
+                              setCountryImage(`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`);
+                              setIsCountryDropdownOpen(false);
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50"
+                          >
+                            <img
+                              src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                              srcSet={`https://flagcdn.com/48x36/${country.code.toLowerCase()}.png 2x`}
+                              alt={`${country.name} flag`}
+                              className="w-6 h-4"
+                            />
+                            <span className="text-lg">{country.name}</span>
+                            <span className="text-lg text-gray-500 ml-auto">{country.dialCode}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="الرجاء إدخال رقم الهاتف"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                    handlePhoneChange(numericValue);
+                  }}
+                  pattern="[0-9]*"
+                  inputMode="numeric"
+                  className="flex-1 px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-right h-[50px] text-lg md:text-xl"
+                />
+              </div>
+              {phoneError && (
+                <p className="text-red-500 text-lg md:text-xl mt-2 text-right">{phoneError}</p>
               )}
             </div>
-            <input
-              type="tel"
-              name="phone"
-              placeholder="الرجاء إدخال رقم الهاتف"
-              value={formData.phone}
-              onChange={(e) => {
-                const numericValue = e.target.value.replace(/[^0-9]/g, '');
-                handlePhoneChange(numericValue);
-              }}
-              pattern="[0-9]*"
-              inputMode="numeric"
-              className="flex-1 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-right h-[42px] text-lg"
-            />
-          </div>
-          {phoneError && (
-            <p className="text-red-500 text-lg mt-1 text-right">{phoneError}</p>
-          )}
+
+            {/* Email */}
+            <div>
+              <label className="block text-lg md:text-xl mb-2 text-right">
+                البريد الإلكتروني <span className="text-accent">*</span>
+              </label>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="البريد الإلكتروني"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-right text-lg md:text-xl"
+              />
+            </div>
+
+            {/* Terms and Conditions */}
+            <div className="flex items-center gap-2">
+              <label className="text-lg md:text-xl">
+                بالمتابعة فإنني أقر بموافقتي على <Link href="/terms" className="text-accent">الشروط والأحكام</Link>
+              </label>
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="w-5 h-5 rounded border-gray-300 text-accent focus:ring-accent"
+              />
+            </div>
+
+            {/* ReCAPTCHA */}
+            {/* <div className="flex justify-center">
+              <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                onChange={(value) => setRecaptchaValue(value)}
+              />
+            </div> */}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`w-full py-4 rounded-lg transition-colors text-lg md:text-xl font-semibold ${
+                isSubmitting 
+                  ? 'bg-accent/50 cursor-not-allowed' 
+                  : 'bg-accent hover:bg-accent/80'
+              } text-white`}
+            >
+              {isSubmitting ? 'جاري الإرسال...' : 'تسجيل'}
+            </button>
+          </form>
         </div>
-
-        {/* Email */}
-        <div>
-          <label className="block text-lg mb-1 text-right">
-            البريد الإلكتروني <span className="text-accent">*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="البريد الإلكتروني"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-right text-lg"
-          />
-        </div>
-
-        {/* Terms and Conditions */}
-        <div className="flex  items-center gap-2">
-          <label className="">
-            بالمتابعة فإنني أقر بموافقتي على <Link href="/terms" className="text-accent">الشروط والأحكام</Link>
-          </label>
-          <input
-            type="checkbox"
-            checked={agreedToTerms}
-            onChange={(e) => setAgreedToTerms(e.target.checked)}
-            className="rounded border-gray-300 text-accent focus:ring-accent"
-          />
-        </div>
-
-        {/* ReCAPTCHA */}
-        {/* <div className="flex justify-center">
-          <ReCAPTCHA
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-            onChange={(value) => setRecaptchaValue(value)}
-          />
-        </div> */}
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-3 rounded-lg transition-colors text-base font-semibold ${
-            isSubmitting 
-              ? 'bg-accent/50 cursor-not-allowed' 
-              : 'bg-accent hover:bg-accent/80'
-          } text-white`}
-        >
-          {isSubmitting ? 'جاري الإرسال...' : 'تسجيل'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

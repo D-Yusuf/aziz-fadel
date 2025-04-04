@@ -74,6 +74,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
     } else {
       console.log('All questions answered:', answers);
       localStorage.setItem("package", JSON.stringify(answers));
+      localStorage.setItem("previousUrl", window.location.pathname + window.location.search);
       router.push(`/checkout`);
     }
   };

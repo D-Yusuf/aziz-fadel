@@ -28,11 +28,17 @@ const FaqItem = ({ question, answer }: FaqItemProps) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ 
+              type: "spring",
+              stiffness: 800,
+              damping: 20,
+              mass: 0.6,
+              duration: 0.1
+            }}
+            className="relative"
           >
             <div className="px-4 pb-2 bg-secondary rounded-b-lg space-y-2">
             <hr className='border-gray-200 px-10 h-1'/>
