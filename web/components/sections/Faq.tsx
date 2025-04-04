@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { faqData } from '@/data'
+import Link from 'next/link'
 interface FaqItemProps {
   question: string;
   answer: string;
@@ -55,13 +56,17 @@ export default function Faq() {
   
 
   return (
-    <div className="lg:w-2/3 w-full mx-auto bg-white py-12 px-4">
+    <div className="w-full mx-auto bg-white py-12 px-4">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">الأسئلة الشائعة</h2>
-      <div className="space-y-4">
+      <div className="lg:w-2/3 w-full mx-auto">
         {faqData.map((faq, index) => (
           <FaqItem key={index} question={faq.question} answer={faq.answer} />
         ))}
       </div>
+        <div className='w-full mt-20 gap-12 p-10 bg-secondary   rounded-xl  flex items-center justify-center flex-col'>
+          <h1 className='max-w-4/5 text-center lg:text-6xl md:text-4xl text-3xl  font-superbold  leading-relaxed'>تحدى نفسك وابدأ رحلتك نحو جسم صحي ومثالي.</h1>
+          <Link href='#subscribe' className='bg-accent font-extrabold md:text-xl text-base text-white px-8 py-2 rounded-md w-fit'>اشترك الآن</Link>
+        </div>
     </div>
   )
 }

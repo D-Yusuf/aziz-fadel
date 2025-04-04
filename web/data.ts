@@ -8,6 +8,8 @@ export interface BaseQuestion {
 export interface DateInputQuestion extends BaseQuestion {
   type: 'date-input';
   answer: string;
+  minDate?: Date;
+  maxDate?: Date;
   followUp?: (answer: string) => FollowUpQuestion | undefined;
 }
 
@@ -23,6 +25,8 @@ export interface MultipleChoiceQuestion extends BaseQuestion {
 export interface TextInputQuestion extends BaseQuestion {
   type: 'text-input';
   answer: string;
+  minLength?: number;
+  maxLength?: number;
   followUp?: (answer: string) => FollowUpQuestion | undefined;
 }
 
@@ -127,7 +131,9 @@ export const questions: { male: Question[], female: Question[] } = {
       id: 6,
       type: 'date-input',
       question: "تاريخ الميلاد",
-      answer: "٢٠٠٠-٢٠٠٩"
+      answer: "",
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() - 16)),
+      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100))
     },
     {
       id: 7,
@@ -165,9 +171,9 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'text-input',
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
-     
+      minLength: 20,
+      maxLength: 500
     },
-   
     {
       id: 11,
       type: 'multiple-choice',
@@ -175,19 +181,14 @@ export const questions: { male: Question[], female: Question[] } = {
       options: ["مبتدئ", "متوسط", "متقدم"],
       answer: ""
     },
-    {
-      id: 12, // will delete and add a birthday checker in the prev birthday question
-      type: 'multiple-choice',
-      question: "هل ستقوم بالالتزام بتعليمات المدرب وعمرك أكبر من ١٦ سنة؟",
-      options: ["نعم", "لا"],
-      answer: "",
-     
-    },
+
     {
       id: 13,
       type: 'date-input',
       question: "متى تستطيع البدء بالبرنامج التدريبي؟",
-      answer: ""
+      answer: "",
+      minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
     },
 
   ],
@@ -242,7 +243,9 @@ export const questions: { male: Question[], female: Question[] } = {
       id: 6,
       type: 'date-input',
       question: "تاريخ الميلاد",
-      answer: "٢٠٠٠-٢٠٠٩"
+      answer: "",
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() - 16)),
+      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100))
     },
     {
       id: 7,
@@ -280,9 +283,9 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'text-input',
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
-     
+      minLength: 20,
+      maxLength: 500
     },
-   
     {
       id: 11,
       type: 'multiple-choice',
@@ -291,18 +294,12 @@ export const questions: { male: Question[], female: Question[] } = {
       answer: ""
     },
     {
-      id: 12, // will delete and add a birthday checker in the prev birthday question
-      type: 'multiple-choice',
-      question: "هل ستقومين بالالتزام بتعليمات المدرب وعمرك أكبر من ١٦ سنة؟",
-      options: ["نعم", "لا"],
-      answer: "",
-     
-    },
-    {
       id: 13,
       type: 'date-input',
       question: "متى تستطيعين البدء بالبرنامج التدريبي؟",
-      answer: ""
+      answer: "",
+      minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
     }
   ]
 };
@@ -355,6 +352,30 @@ export const faqData = [
   {
     question: "متى الدفعات التي يستحقها النادي مستحقة؟",
     answer: "الدفعات تستحق في بداية كل شهر"
+  }
+]
+
+
+export const results = [
+  {
+    image: '/results/1.webp',
+    text: 'العمر ١٧.. زيادة ١١ كيلو'
+  },
+  {
+    image: '/results/2.webp',
+    text: 'نتائج مذهلة بعد 6 أسابيع من البرنامج العلاجي'
+  },
+  {
+    image: '/results/3.webp',
+    text: 'تحسن كبير في مظهر البشرة بعد شهرين من العلاج'
+  },
+  {
+    image: '/results/4.webp',
+    text: 'العمر ٢٩، نتائج مذهلة بعد ١٢ أسبوع'
+  },
+  {
+    image: '/results/5.webp',
+    text: 'تحسن واضح في نسيج البشرة بعد 8 أسابيع'
   }
 ]
 

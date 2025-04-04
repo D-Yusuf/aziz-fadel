@@ -48,30 +48,29 @@ function ServiceCards() {
     return (
         <div className='flex flex-wrap gap-8 items-center justify-center w-full'>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
+            <div className='flex lg:w-[31%] h-[300px] text-center w-full flex-col gap-5 shadow-sm items-center bg-secondary px-8 py-8 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                <h2 className='text-2xl font-extrabold'>التواصل المستمر 
                 </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                <p className='text-base max-w-xl text-gray-500 overflow-y-auto max-h-[80px]'>تواصل مع المدرب بشكل مباشر طيلة فترة الاشتراك
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
+            <div className='flex lg:w-[31%] h-[300px] text-center w-full flex-col gap-5 shadow-sm items-center bg-secondary px-8 py-8 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                <h2 className='text-2xl font-extrabold'>خطة مخصصة لك
                 </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                <p className='text-base max-w-xl text-gray-500 overflow-y-auto max-h-[80px]'>قم ببناء خطة للتمرين والتغذية مصممة خصيصًا لتلبية احتياجاتك وأهدافك
                 </p>
             </div>
             {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
+            <div className='flex lg:w-[31%] h-[300px] text-center w-full flex-col gap-5 shadow-sm items-center bg-secondary px-8 py-8 rounded-md'>
                 <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
+                <h2 className='text-2xl font-extrabold'>متابعة مستمرة 
                 </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
+                <p className='text-base max-w-xl text-gray-500 overflow-y-auto max-h-[80px]'>الفحص الدقيق ومتابعة تمارينك وتغذيتك حتى تتم بشكل صحيح دون أخطاء
                 </p>
             </div>
-            
         </div>
     )
 }

@@ -107,6 +107,12 @@ export default function Questions({
     if (!currentAnswer?.answer) return false;
     if (followUpQuestion && !followUpAnswer?.answer) return false;
     if (isMeasurementQuestion(currentQuestion) && (!measurements.height || !measurements.weight)) return false;
+    if (isDateInputQuestion(currentQuestion) && selectedDate) {
+      const minDate = currentQuestion.minDate;
+      const maxDate = currentQuestion.maxDate;
+      if (minDate && selectedDate < minDate) return false;
+      if (maxDate && selectedDate > maxDate) return false;
+    }
     return true;
   };
 
@@ -163,9 +169,22 @@ export default function Questions({
                 onChange={(e) => handleAnswer(currentQuestion.question, e.target.value)}
                 placeholder="أدخل إجابتك هنا"
                 rows={4}
+                minLength={currentQuestion.minLength}
+                maxLength={currentQuestion.maxLength}
                 className="w-full p-4 text-right border-2 border-gray-200 rounded-lg
                          focus:border-accent outline-none resize-none"
               />
+              <div className="mt-2 text-sm text-gray-500 text-right">
+                {currentQuestion.minLength && currentQuestion.maxLength && (
+                  <span>يجب أن تكون الإجابة بين {currentQuestion.minLength} و {currentQuestion.maxLength} حرفاً</span>
+                )}
+                {currentQuestion.minLength && !currentQuestion.maxLength && (
+                  <span>يجب أن تكون الإجابة {currentQuestion.minLength} حرفاً على الأقل</span>
+                )}
+                {!currentQuestion.minLength && currentQuestion.maxLength && (
+                  <span>يجب ألا تتجاوز الإجابة {currentQuestion.maxLength} حرفاً</span>
+                )}
+              </div>
             </div>
           )}
 
@@ -203,12 +222,17 @@ export default function Questions({
                 showYearDropdown
                 scrollableYearDropdown
                 yearDropdownItemNumber={100}
-                placeholderText="اختر تاريخ الميلاد"
+                placeholderText="اختر التاريخ"
                 className="w-full p-3 text-right border-2 border-gray-200 rounded-xl focus:border-accent outline-none"
                 calendarClassName="text-right"
-                maxDate={new Date()}
-                minDate={new Date('1940-01-01')}
+                minDate={currentQuestion.minDate}
+                maxDate={currentQuestion.maxDate}
               />
+              <div className="mt-2 text-sm text-gray-500 text-right">
+                
+                  <span>يجب أن يكون عمر المشترك ١٦ سنة على الأقل</span>
+                
+              </div>
             </div>
           )}
 

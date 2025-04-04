@@ -1,8 +1,11 @@
+'use client'
 import React, { use } from 'react'
 import { subscriptions } from '@/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaArrowRight } from "react-icons/fa";
+import ReviewSwiper from '@/components/common/ReviewSwiper';
+import { results } from '@/data';
 export default function page({params}:{params: Promise<{id: string}>}) {
   const id = use(params).id
   const subscription = subscriptions.find((subscription) => subscription.id === parseInt(id))
@@ -65,13 +68,7 @@ export default function page({params}:{params: Promise<{id: string}>}) {
         {/* Customers Results */}
         <div className='flex flex-col gap-10'>
           <h2 className='text-xl font-bold text-right'>نتائج العملاء</h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {/* {results.map((result) => (
-              <div key={result.id} className='bg-white rounded-xl p-6 shadow-md'>
-                <Image src={result.image} alt={result.name} width={100} height={100} />
-              </div>
-            ))} */}
-          </div>
+           <ReviewSwiper results={results} />
         </div>
         
         
@@ -104,7 +101,7 @@ export default function page({params}:{params: Promise<{id: string}>}) {
 
 
 
-          <Link href={`/subscribe/${subscription?.id}`} className='bg-accent text-white px-8 py-3 rounded-lg w-full text-lg font-semibold shadow-lg hover:bg-accent/80 transition-colors'>
+          <Link href={`/subscribe/${subscription?.id}`} className='bg-accent text-white text-center px-8 py-3 rounded-lg w-full text-xl font-extrabold shadow-lg hover:bg-accent/80 transition-colors'>
             اشترك الآن - {subscription?.price || 399}$
           </Link>
       </div>
