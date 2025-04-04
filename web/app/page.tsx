@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <>
     <div className="max-w-6xl mx-auto">
-    <div className="flex flex-col gap-10 py-8 px-5 max-w-7xl mx-auto">
-      <div className="flex flex-col md:h-screen h-fit">
+    <div className="flex flex-col gap-10  px-5 max-w-7xl mx-auto">
+      <div className="flex flex-col min-h-screen ">
         <Navbar />
         <Main />
       </div>

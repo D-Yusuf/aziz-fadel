@@ -31,7 +31,7 @@ export default function Questions({
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentAnswer = answers.find(a => a.question === currentQuestion.question);
-  const followUpQuestion = currentQuestion.followUp;
+  const followUpQuestion = currentAnswer ? currentQuestion.followUp?.(currentAnswer.answer) : undefined;
   const followUpAnswer = followUpQuestion ? answers.find(a => a.question === followUpQuestion.question) : null;
   const shouldShowFollowUp = currentAnswer && followUpQuestion;
 

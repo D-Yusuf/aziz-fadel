@@ -16,7 +16,7 @@ export default function Services() {
         <hr className='max-w-xl w-full  border-t border-gray-300' />
         <div id='subscribe' className='flex flex-col gap-5 items-center'>
             <h1 className='text-4xl font-extrabold mb-5'>الاشتراكات المتوفرة</h1>
-            <div className='flex flex-wrap gap-4 items-center justify-center'>
+            <div className='flex flex-wrap gap-4 items-center justify-between'>
                 {subscriptions.map((subscription) => (
                     <SubscriptionCard key={subscription.name} subscription={subscription} />
                 ))}
@@ -29,9 +29,9 @@ export default function Services() {
 
 function SubscriptionCard({ subscription }: { subscription: Subscription }) {
     return (
-        <div className='flex flex-col relative  shadow-sm text-center rounded-md hover:bg-white p-5'>
+        <div className='flex flex-col relative lg:w-[49%] w-full shadow-sm text-center rounded-md p-5 bg-secondary'>
 
-                <Image  src={placeholder} alt={subscription.name}  className=' h-40 object-cover rounded-md' />
+                <Image  src={placeholder} alt={subscription.name}  className=' lg:h-40 h-64 mx-auto object-cover  rounded-md' />
                 
           
             <div className='flex flex-col gap-4 py-5 px-5'>
@@ -71,30 +71,7 @@ function ServiceCards() {
                 <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
                 </p>
             </div>
-            {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
-                <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
-                </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
-                </p>
-            </div>
-            {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
-                <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
-                </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
-                </p>
-            </div>
-            {/* box */}
-            <div className='flex flex-col gap-5 shadow-sm items-center  bg-[#ffffff] px-8 py-18 rounded-md'>
-                <PiBowlFoodBold className='text-8xl text-accent' />
-                <h2 className='text-2xl font-extrabold'>٣ أشهر من المتابعة
-                </h2>
-                <p className='text-xs text-gray-500'>حتى ترى نتائج أنت بحاجة إلى متابعة لمدة ٣ أشهر على الأقل
-                </p>
-            </div>
+            
         </div>
     )
 }

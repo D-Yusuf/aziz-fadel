@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
-
+import { faqData } from '@/data'
 interface FaqItemProps {
   question: string;
   answer: string;
@@ -46,36 +46,7 @@ const FaqItem = ({ question, answer }: FaqItemProps) => {
 }
 
 export default function Faq() {
-  const faqData = [
-    {
-      question: "هل تريد البدء معنا؟",
-      answer: "نعم، يمكنك البدء معنا في أي وقت"
-    },
-    {
-      question: "هل النتائج مضمونة؟",
-      answer: "النتائج تعتمد على التزامك بالبرنامج"
-    },
-    {
-      question: "هل تستطيع إنقاص الوزن؟",
-      answer: "نعم، مع برنامجنا المتخصص"
-    },
-    {
-      question: "كيف التواصل مع المدرب؟",
-      answer: "يمكنك التواصل عبر التطبيق مباشرة"
-    },
-    {
-      question: "هل يوجد خطة استرجاع المال؟",
-      answer: "نعم، لدينا سياسة استرجاع خلال 30 يوم"
-    },
-    {
-      question: "هل يمكن تغيير المدرب الخاص بي؟",
-      answer: "نعم، يمكنك طلب تغيير المدرب"
-    },
-    {
-      question: "متى الدفعات التي يستحقها النادي مستحقة؟",
-      answer: "الدفعات تستحق في بداية كل شهر"
-    }
-  ]
+  
 
   return (
     <div className="lg:w-2/3 w-full mx-auto bg-white py-12 px-4">
