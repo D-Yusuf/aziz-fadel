@@ -13,7 +13,6 @@ interface Answer {
 
 export default function QuestionsPage({params}:{params: Promise<{id: string}>}) {
   const id = use(params).id;
-  console.log(subscriptions[Number(id)])
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([{question: "الباقة", answer: subscriptions.filter(sub => sub.id === parseInt(id))[0].name}]);
