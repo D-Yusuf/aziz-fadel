@@ -2,12 +2,14 @@
 export interface BaseQuestion {
   id: number;
   question: string;
+  note: string;
 }
 
 // Question with date input
 export interface DateInputQuestion extends BaseQuestion {
   type: 'date-input';
   answer: string;
+  value: Date;
   minDate?: Date;
   maxDate?: Date;
   followUp?: (answer: string) => FollowUpQuestion | undefined;
@@ -82,14 +84,16 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'multiple-choice',
       question: "أين ستقوم بالتمارين؟",
       options: ["النادي", "المنزل"],
-      answer: ""
+      answer: "",
+      note: ""
     },
     {
       id: 2,
       type: 'multiple-choice',
       question: "ماهو شكل جسمك حاليا؟",
       options: ["سمنة", "سكيني فات", "نحافة", "جسم متناسق أريد تطويره أكثر"],
-      answer: ""
+      answer: "",
+      note: ""
     },
     {
       id: 3,
@@ -97,12 +101,14 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "ما عدد أيام التمرين التي ستلتزم بها خلال اشتراكك؟",
       options: ["٣ أيام", "٤ أيام", "٥ أيام"],
       answer: "",
+      note: "",
       followUp: (answer: string) => ({
         id: 3.1,
         type: 'multiple-choice',
         question: "هل بإمكانك التمرين ليوم إضافي لتقسيم الجهد وحجم التمرين؟",
         options: ["نعم", "لا"],
-        answer: ""
+        answer: "",
+        note: ""
       })
     },
     // {
@@ -125,15 +131,18 @@ export const questions: { male: Question[], female: Question[] } = {
       measurements: {
         height: "",
         weight: ""
-      }
+      },
+      note: ""
     },
     {
       id: 6,
       type: 'date-input',
       question: "تاريخ الميلاد",
       answer: "",
+      value: new Date(2000, 0, 1), // 1/1/2000
       maxDate: new Date(new Date().setFullYear(new Date().getFullYear() - 16)),
-      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100))
+      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100)),
+      note: "يجب أن يكون العمر ١٦ على الأقل"
     },
     {
       id: 7,
@@ -141,13 +150,15 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "هل لديك مشاكل صحية؟",
       options: ["نعم", "لا"],
       answer: "",
+      note: "",
       followUp: (answer: string) => {
         if (answer === "نعم") {
           return {
             id: 7.1,
             type: 'text-input',
             question: "اذكرها",
-            answer: ""
+            answer: "",
+            note: ""
           };
         }
         return undefined;
@@ -159,11 +170,13 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "أين سمعت عنا؟" ,
       options: ["يوتيوب", "اكس", "تيليغرام", "تيكتوك", "أخرى"],
       answer: "",
+      note: "",
       followUp: (answer: string) => answer === "أخرى" ? {
         id: 8.1,
         type: 'text-input',
         question: "من أين؟",
-        answer: ""
+        answer: "",
+        note: ""
       } : undefined
     },
     {
@@ -172,14 +185,16 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
       minLength: 20,
-      maxLength: 500
+      maxLength: 500,
+      note: ""
     },
     {
       id: 11,
       type: 'multiple-choice',
       question: "ما مدى معرفتك بتمارين المقاومة؟",
       options: ["مبتدئ", "متوسط", "متقدم"],
-      answer: ""
+      answer: "",
+      note: ""
     },
 
     {
@@ -187,8 +202,10 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'date-input',
       question: "متى تستطيع البدء بالبرنامج التدريبي؟",
       answer: "",
+      value: new Date(), // Today
       minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      note: ""
     },
 
   ],
@@ -199,14 +216,16 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'multiple-choice',
       question: "أين ستقومين بالتمارين؟",
       options: ["النادي", "المنزل"],
-      answer: ""
+      answer: "",
+      note: ""
     },
     {
       id: 2,
       type: 'multiple-choice',
       question: "ماهو شكل جسمك حاليا؟",
       options: ["سمنة", "سكيني فات", "نحافة", "جسم متناسق أريد تطويره أكثر"],
-      answer: ""
+      answer: "",
+      note: ""
     },
     {
       id: 3,
@@ -214,12 +233,14 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "ما عدد أيام التمرين التي ستلتزمين بها خلال اشتراكك؟",
       options: ["٣ أيام", "٤ أيام", "٥ أيام"],
       answer: "",
+      note: "",
       followUp: (answer: string) => ({
         id: 3.1,
         type: 'multiple-choice',
         question: "هل بإمكانك التمرين ليوم إضافي لتقسيم الجهد وحجم التمرين؟",
         options: ["نعم", "لا"],
-        answer: ""
+        answer: "",
+        note: ""
       })
     },
     {
@@ -228,7 +249,8 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "ما هو أقرب شكل لنسبة الدهون في الجسم لديك؟",
       options: [{ image: "1.png", value: "1" }, { image: "2.png", value: "2" }, { image: "3.png", value: "3" }, { image: "4.png", value: "4" }, { image: "5.png", value: "5" }, { image: "6.png", value: "6" }, { image: "7.png", value: "7" }, { image: "8.png", value: "8" }],
       imageFolder: "/female",
-      answer: "1"
+      answer: "1",
+      note: ""
     },
     {
       id: 5,
@@ -237,15 +259,18 @@ export const questions: { male: Question[], female: Question[] } = {
       measurements: {
         height: "",
         weight: ""
-      }
+      },
+      note: ""
     },
     {
       id: 6,
       type: 'date-input',
       question: "تاريخ الميلاد",
       answer: "",
+      value: new Date(2000, 0, 1), // 1/1/2000
       maxDate: new Date(new Date().setFullYear(new Date().getFullYear() - 16)),
-      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100))
+      minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100)),
+      note: "يجب أن يكون العمر ١٦ على الأقل"
     },
     {
       id: 7,
@@ -253,13 +278,15 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "هل لديك مشاكل صحية؟",
       options: ["نعم", "لا"],
       answer: "",
+      note: "",
       followUp: (answer: string) => {
         if (answer === "نعم") {
           return {
             id: 7.1,
             type: 'text-input',
             question: "اذكرها",
-            answer: ""
+            answer: "",
+            note: ""
           };
         }
         return undefined;
@@ -271,11 +298,13 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "أين سمعت عنا؟" ,
       options: ["يوتيوب", "اكس", "تيليغرام", "تيكتوك", "أخرى"],
       answer: "",
+      note: "",
       followUp: (answer: string) => answer === "أخرى" ? {
         id: 8.1,
         type: 'text-input',
         question: "من أين؟",
-        answer: ""
+        answer: "",
+        note: ""
       } : undefined
     },
     {
@@ -284,22 +313,26 @@ export const questions: { male: Question[], female: Question[] } = {
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
       minLength: 20,
-      maxLength: 500
+      maxLength: 500,
+      note: ""
     },
     {
       id: 11,
       type: 'multiple-choice',
       question: "ما مدى معرفتك بتمارين المقاومة؟",
       options: ["مبتدئ", "متوسط", "متقدم"],
-      answer: ""
+      answer: "",
+      note: ""
     },
     {
       id: 13,
       type: 'date-input',
       question: "متى تستطيعين البدء بالبرنامج التدريبي؟",
       answer: "",
+      value: new Date(), // Today
       minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+      maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      note: "يجب أن يكون من اسبوع من تاريخ الاشتراك"
     }
   ]
 };
@@ -326,32 +359,24 @@ export const subscriptions: Subscription[] = [
 
 export const faqData = [
   {
-    question: "هل تريد البدء معنا؟",
-    answer: "نعم، يمكنك البدء معنا في أي وقت"
+    question: "متى استطيع البدء بعد الاشتراك؟",
+    answer: "خلال ٣ أيام عمل على الأقل لتصميم برنامجك المخصص"
+  },
+  {
+    question: "هل الاشتراك للنساء أيضاً؟",
+    answer: "نعم، الاشتراك للرجال والنساء"
+  },
+  {
+    question: "كيفية التواصل مع المدرب؟",
+    answer: "التواصل مع المدرب عبر المحادثات الكتابية في الواتساب"
   },
   {
     question: "هل النتائج مضمونة؟",
-    answer: "النتائج تعتمد على التزامك بالبرنامج"
+    answer: "نعم، وفي حال الالتزام بكامل التعليمات طوال فترة التسجيل وعدم الحصول على النتائج عند انتهاء الاشتراك فسيسترد المبلغ بالكامل"
   },
   {
-    question: "هل تستطيع إنقاص الوزن؟",
-    answer: "نعم، مع برنامجنا المتخصص"
-  },
-  {
-    question: "كيف التواصل مع المدرب؟",
-    answer: "يمكنك التواصل عبر التطبيق مباشرة"
-  },
-  {
-    question: "هل يوجد خطة استرجاع المال؟",
-    answer: "نعم، لدينا سياسة استرجاع خلال 30 يوم"
-  },
-  {
-    question: "هل يمكن تغيير المدرب الخاص بي؟",
-    answer: "نعم، يمكنك طلب تغيير المدرب"
-  },
-  {
-    question: "متى الدفعات التي يستحقها النادي مستحقة؟",
-    answer: "الدفعات تستحق في بداية كل شهر"
+    question: "ما هي الحالات التي لا يستقبلها كابتن عبدالعزيز؟",
+    answer: "الحالات المرضية المزمنة كمرضى السرطان وأمراض المناعة بالإضافة إلى النساء الحوامل والمرضعات"
   }
 ]
 
@@ -363,19 +388,19 @@ export const results = [
   },
   {
     image: '/results/2.webp',
-    text: 'نتائج مذهلة بعد 6 أسابيع من البرنامج العلاجي'
+    text: 'العمر ٢٣، نتائج مذهلة بعد ١٢ أسبوع'
   },
   {
     image: '/results/3.webp',
-    text: 'تحسن كبير في مظهر البشرة بعد شهرين من العلاج'
+    text: 'العمر ٢٢، نتائج ١٢ أسبوع'
   },
   {
     image: '/results/4.webp',
-    text: 'العمر ٢٩، نتائج مذهلة بعد ١٢ أسبوع'
+    text: 'العمر ٢٩، تطور ١٢ أسبوع'
   },
   {
     image: '/results/5.webp',
-    text: 'تحسن واضح في نسيج البشرة بعد 8 أسابيع'
+    text: 'العمر ٢٣، زيادة ٩ كيلو'
   }
 ]
 

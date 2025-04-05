@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Question, MultipleChoiceQuestion, TextInputQuestion, MeasurementQuestion, ImageChoiceQuestion, DateInputQuestion } from '@/data';
 import Image from 'next/image';
 import DatePicker from "react-datepicker";
@@ -35,6 +35,13 @@ export default function Questions({
   const followUpQuestion = currentAnswer ? currentQuestion.followUp?.(currentAnswer.answer) : undefined;
   const followUpAnswer = followUpQuestion ? answers.find(a => a.question === followUpQuestion.question) : null;
   const shouldShowFollowUp = currentAnswer && followUpQuestion;
+
+  // Reset selectedDate when question changes
+  useEffect(() => {
+    if (isDateInputQuestion(currentQuestion)) {
+      setSelectedDate(null);
+    }
+  }, [currentQuestionIndex, currentQuestion]);
 
   const handleAnswer = (question: string, answer: string) => {
     setSelectedOption(answer);
@@ -166,7 +173,13 @@ export default function Questions({
             <div className="w-full">
               <textarea
                 value={currentAnswer?.answer || ''}
-                onChange={(e) => handleAnswer(currentQuestion.question, e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if ((!currentQuestion.minLength || value.length >= currentQuestion.minLength) &&
+                      (!currentQuestion.maxLength || value.length <= currentQuestion.maxLength)) {
+                    handleAnswer(currentQuestion.question, value);
+                  }
+                }}
                 placeholder="أدخل إجابتك هنا"
                 rows={4}
                 minLength={currentQuestion.minLength}
@@ -227,12 +240,32 @@ export default function Questions({
                 calendarClassName="text-right"
                 minDate={currentQuestion.minDate}
                 maxDate={currentQuestion.maxDate}
+                filterDate={(date) => {
+                  const minDate = currentQuestion.minDate;
+                  const maxDate = currentQuestion.maxDate;
+                  if (minDate && date < minDate) return false;
+                  if (maxDate && date > maxDate) return false;
+                  return true;
+                }}
+                dayClassName={(date) => {
+                  const minDate = currentQuestion.minDate;
+                  const maxDate = currentQuestion.maxDate;
+                  const isSelected = date.toDateString() === (selectedDate?.toDateString() || '');
+                  const isAvailable = (!minDate || date >= minDate) && (!maxDate || date <= maxDate);
+                  
+                  if (isSelected) return 'bg-accent text-white rounded-full';
+                  if (!isAvailable) return 'opacity-50';
+                  return 'text-black font-semibold';
+                }}
               />
-              <div className="mt-2 text-sm text-gray-500 text-right">
-                
-                  <span>يجب أن يكون عمر المشترك ١٦ سنة على الأقل</span>
-                
-              </div>
+              {currentQuestion.note && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-gray-500 text-right">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span>{currentQuestion.note}</span>
+                </div>
+              )}
             </div>
           )}
 

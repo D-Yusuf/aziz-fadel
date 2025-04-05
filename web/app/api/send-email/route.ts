@@ -30,6 +30,27 @@ export async function POST(request: Request) {
     let currentPage = createNewPage();
     let yPosition = 800;
 
+    // Add user info at top right
+    const userInfo = [
+      `${formData.firstName} ${formData.lastName}`,
+      formData.email,
+      `${formData.countryCode}${formData.phone}`,
+      `${new Date().toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' })} - ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`
+    ];
+
+    // Draw user info
+    userInfo.forEach((info, index) => {
+      const infoWidth = font.widthOfTextAtSize(info, 10);
+      currentPage.drawText(info, {
+        x: 550 - infoWidth,
+        y: yPosition - (index * 15),
+        size: 10,
+        font,
+        color: rgb(0.4, 0.4, 0.4)
+      });
+    });
+    yPosition -= 80;
+
     // Add title to first page
     const titleWidth = font.widthOfTextAtSize('إجابات الاستبيان', 28);
     currentPage.drawText('إجابات الاستبيان', {
@@ -50,26 +71,26 @@ export async function POST(request: Request) {
       }
 
       // Add question with larger text and bold styling
-      const questionWidth = font.widthOfTextAtSize(item.question, 22);
+      const questionWidth = font.widthOfTextAtSize(item.question, 16);
       currentPage.drawText(item.question, {
         x: 550 - questionWidth,
         y: yPosition,
-        size: 22,
+        size: 16,
         font,
         color: rgb(0, 0, 0)
       });
-      yPosition -= 40;
+      yPosition -= 30;
 
       // Add answer with smaller text
-      const answerWidth = font.widthOfTextAtSize(item.answer, 16);
+      const answerWidth = font.widthOfTextAtSize(item.answer, 14);
       currentPage.drawText(item.answer, {
         x: 550 - answerWidth,
         y: yPosition,
-        size: 16,
+        size: 14,
         font,
         color: rgb(0.2, 0.2, 0.2)
       });
-      yPosition -= 50;
+      yPosition -= 40;
 
       // Add a decorative line between Q&A pairs
       currentPage.drawLine({
@@ -105,8 +126,11 @@ export async function POST(request: Request) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>طلب جديد للتسجيل</title>
       </head>
-      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; background-color: #f9fafb;">
+      <body dir="rtl" style="margin: 0; padding: 0; font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; background-color: #f9fafb;">
         <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
+          <!-- User Info at Top Right -->
+          
+
           <!-- Header with Logo -->
           <div style="text-align: center; margin-bottom: 40px;">
             <img src="https://aziz-fadel.vercel.app/logo.svg" alt="Aziz Fadel Logo" style="height: 64px; margin-bottom: 24px;">
@@ -118,28 +142,28 @@ export async function POST(request: Request) {
             <h2 style="color: #111827; font-size: 24px; margin: 0 0 24px 0; font-weight: 700; text-align: right;">معلومات العميل</h2>
             <div style="display: grid; gap: 16px;">
               <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="color: #4b5563; font-size: 18px;">الاسم الأول</h2>
-                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.firstName}</h1>
+                <h2 style="color: #4b5563; font-size: 16px; font-weight: bold; margin: 0;">الاسم الأول</h2>
+                <h1 style="color: #111827; font-size: 14px; font-weight: normal; margin: 8px 0 0 0;">${formData.firstName}</h1>
               </div>
               <br>
               <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="color: #4b5563; font-size: 18px;">اسم العائلة</h2>
-                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.lastName}</h1>
+                <h2 style="color: #4b5563; font-size: 16px; font-weight: bold; margin: 0;">اسم العائلة</h2>
+                <h1 style="color: #111827; font-size: 14px; font-weight: normal; margin: 8px 0 0 0;">${formData.lastName}</h1>
               </div>
               <br>
               <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="color: #4b5563; font-size: 18px;">رقم الهاتف</h2>
-                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.countryCode}${formData.phone}</h1>
+                <h2 style="color: #4b5563; font-size: 16px; font-weight: bold; margin: 0;">رقم الهاتف</h2>
+                <h1 style="color: #111827; font-size: 14px; font-weight: normal; margin: 8px 0 0 0;">${formData.countryCode}${formData.phone}</h1>
               </div>
               <br>
               <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="color: #4b5563; font-size: 18px;">البريد الإلكتروني</h2>
-                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.email}</h1>
+                <h2 style="color: #4b5563; font-size: 16px; font-weight: bold; margin: 0;">البريد الإلكتروني</h2>
+                <h1 style="color: #111827; font-size: 14px; font-weight: normal; margin: 8px 0 0 0;">${formData.email}</h1>
               </div>
               <br>
               <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="color: #4b5563; font-size: 18px;">الدولة</h2>
-                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.country}</h1>
+                <h2 style="color: #4b5563; font-size: 16px; font-weight: bold; margin: 0;">الدولة</h2>
+                <h1 style="color: #111827; font-size: 14px; font-weight: normal; margin: 8px 0 0 0;">${formData.country}</h1>
               </div>
             </div>
           </div>

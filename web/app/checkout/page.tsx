@@ -107,6 +107,10 @@ export default function CheckoutPage() {
       alert('Please enter a valid phone number');
       return;
     }
+    if(!localStorage.getItem('package')){
+      alert('لا توجد معلومات للمستخدم، يرجى التسجيل مجددا');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
