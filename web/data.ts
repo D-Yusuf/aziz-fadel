@@ -105,19 +105,19 @@ export const questions: { male: Question[], female: Question[] } = {
         answer: ""
       })
     },
-    {
-      id: 4,
-      type: 'multiple-choice',
-      question: "هل تود استخدام الهرمونات؟",
-      options: ["نعم", "لا"],
-      answer: "",
-      followUp: (answer: string) => answer === "نعم" ? {
-        id: 4.1,
-        type: 'text-input',
-        question: "اذكر كورساتك السابقة (إن وجدت)",
-        answer: ""
-      } : undefined
-    },
+    // {
+    //   id: 4,
+    //   type: 'multiple-choice',
+    //   question: "هل تود استخدام الهرمونات؟",
+    //   options: ["نعم", "لا"],
+    //   answer: "",
+    //   followUp: (answer: string) => answer === "نعم" ? {
+    //     id: 4.1,
+    //     type: 'text-input',
+    //     question: "اذكر كورساتك السابقة (إن وجدت)",
+    //     answer: ""
+    //   } : undefined
+    // },
     {
       id: 5,
       type: 'measurement',

@@ -4,7 +4,7 @@ import { subscriptions } from '@/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaArrowRight } from "react-icons/fa";
-import ReviewSwiper from '@/components/common/ReviewSwiper';
+import ReviewSwiper from '@/components/common/swipers/ReviewSwiper';
 import { results } from '@/data';
 export default function page({params}:{params: Promise<{id: string}>}) {
   const id = use(params).id

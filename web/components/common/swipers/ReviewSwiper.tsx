@@ -5,6 +5,7 @@ import 'swiper/css/pagination';
 import Image from 'next/image';
 import { StaticImageData } from 'next/image';
 import { Navigation } from 'swiper/modules';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 
 interface Result {
   image: string | StaticImageData;
@@ -19,8 +20,17 @@ interface ReviewSwiperProps {
 export default function ReviewSwiper({ results, className = '' }: ReviewSwiperProps) {
   return (
     <div className='relative'>
-      <div className="swiper-button-prev !text-accent !-left-12 !w-10 !h-10 !hidden md:!block"></div>
-      <div className="swiper-button-next !text-accent !-right-12 !w-10 !h-10 !hidden md:!block"></div>
+      <button 
+        className="review-swiper-button-next absolute top-1/2 -translate-y-1/2 left-0 md:-left-8 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-md rounded-full text-accent hover:bg-gray-50 transition-colors hidden md:flex"
+      >
+        <FaChevronLeft size={16} />
+      </button>
+      
+      <button 
+        className="review-swiper-button-prev absolute top-1/2 -translate-y-1/2 right-0 md:-right-8 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-md rounded-full text-accent hover:bg-gray-50 transition-colors hidden md:flex"
+      >
+        <FaChevronRight size={16} />
+      </button>
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
@@ -28,17 +38,19 @@ export default function ReviewSwiper({ results, className = '' }: ReviewSwiperPr
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
+          reverseDirection: true
         }}
         pagination={{
           clickable: true,
-          el: '.swiper-pagination',
+          el: '.review-swiper-pagination',
           bulletClass: 'swiper-pagination-bullet !bg-accent !w-3 !h-3 !mx-1',
           bulletActiveClass: 'swiper-pagination-bullet-active !bg-accent !w-4 !h-4',
           enabled: true,
         }}
         navigation={{
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
+          nextEl: '.review-swiper-button-next',
+          prevEl: '.review-swiper-button-prev',
+
           enabled: true,
         }}
         modules={[Autoplay, Pagination, Navigation]}

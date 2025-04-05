@@ -117,29 +117,29 @@ export async function POST(request: Request) {
           <div style="background-color: #f9fafb; padding: 32px; border-radius: 16px; margin-bottom: 32px; border: 1px solid #e5e7eb;">
             <h2 style="color: #111827; font-size: 24px; margin: 0 0 24px 0; font-weight: 700; text-align: right;">معلومات العميل</h2>
             <div style="display: grid; gap: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <span style="color: #4b5563; font-size: 18px;">الاسم الأول</span>
-                <span style="color: #111827; font-size: 18px; font-weight: 500;">${formData.firstName}</span>
+              <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h2 style="color: #4b5563; font-size: 18px;">الاسم الأول</h2>
+                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.firstName}</h1>
               </div>
               <br>
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <span style="color: #4b5563; font-size: 18px;">اسم العائلة</span>
-                <span style="color: #111827; font-size: 18px; font-weight: 500;">${formData.lastName}</span>
+              <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h2 style="color: #4b5563; font-size: 18px;">اسم العائلة</h2>
+                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.lastName}</h1>
               </div>
               <br>
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <span style="color: #4b5563; font-size: 18px;">رقم الهاتف</span>
-                <span style="color: #111827; font-size: 18px; font-weight: 500;">${formData.countryCode}${formData.phone}</span>
+              <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h2 style="color: #4b5563; font-size: 18px;">رقم الهاتف</h2>
+                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.countryCode}${formData.phone}</h1>
               </div>
               <br>
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <span style="color: #4b5563; font-size: 18px;">البريد الإلكتروني</span>
-                <span style="color: #111827; font-size: 18px; font-weight: 500;">${formData.email}</span>
+              <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h2 style="color: #4b5563; font-size: 18px;">البريد الإلكتروني</h2>
+                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.email}</h1>
               </div>
               <br>
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <span style="color: #4b5563; font-size: 18px;">الدولة</span>
-                <span style="color: #111827; font-size: 18px; font-weight: 500;">${formData.country}</span>
+              <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center; padding: 16px; background-color: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h2 style="color: #4b5563; font-size: 18px;">الدولة</h2>
+                <h1 style="color: #111827; font-size: 18px; font-weight: 500;">${formData.country}</h1>
               </div>
             </div>
           </div>
