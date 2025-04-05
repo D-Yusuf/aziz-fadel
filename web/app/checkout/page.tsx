@@ -84,17 +84,25 @@ export default function CheckoutPage() {
   };
 
   const handlePhoneChange = (value: string) => {
+    // Remove any non-numeric characters and leading zeros
+    const numericValue = value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+    
     setFormData(prev => ({
       ...prev,
-      phone: value
+      phone: numericValue
     }));
     
-    if (!value) {
+    if (!numericValue) {
       setPhoneError('');
       return;
     }
 
-    
+    const phoneData = phone(formData.countryCode + numericValue);
+    if (!phoneData.isValid) {
+      setPhoneError('رقم الهاتف غير صحيح');
+    } else {
+      setPhoneError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -250,7 +258,7 @@ export default function CheckoutPage() {
                                 countryCode: country.dialCode,
                                 country: country.name
                               }));
-                              handlePhoneChange(country.dialCode);
+                              // handlePhoneChange(country.dialCode);
                               setCountryImage(`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`);
                               setIsCountryDropdownOpen(false);
                             }}

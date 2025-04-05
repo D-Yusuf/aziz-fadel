@@ -42,24 +42,21 @@ export default function page({params}:{params: Promise<{id: string}>}) {
         </div>
 
         {/* Guarantee Section */}
-        <div className='space-y-2'>
+        <div className='space-y-2 font-semibold'>
           <h2 className='text-xl font-bold text-right'>الضمان</h2>
           <div className=' text-right bg-white rounded-xl p-6 border border-gray-200 shadow-md'>
             <p className='text-gray-700'>
-              * ضمان نزول على الأقل 10 كيلوغرام في 90 يوماً للأوزان فوق ال 100 كيلوغرام (في حال الالتزام بالتعليمات الكاملة)
+              النتائج مضمونة، وفي حال عدم حصولك على نتيجة مع التزام كامل من قبلك لمدة ٣ أشهر، يمكنك استرجاع مبلغ الاشتراك
             </p>
-            <p className='text-gray-700'>
-              * إذا لم تحصل على تطور وتكن سعيداً بالاشتراك بعد 90 يوم، أنا لست سعيداً بإبقاء أموالك، فستسترد أموالك بالكامل (في حال الالتزام بالتعليمات الكاملة)
-            </p>
+           
             
             <div className='mt-6'>
-              <p className='font-semibold mb-4'>الالتزام الكامل بالتعليمات حق أخذ الضمان وهذا يشمل:</p>
+              <p className='font-bold mb-4'>لكي تحصل على الضمان يجب عليك الالتزام بالتالي:</p>
               <ul className='list-disc list-inside space-y-2 mr-4'>
                 <li>الالتزام الكامل بجدول التغذية والتمرين</li>
                 <li>الالتزام الكامل بالنشاط المطلوب (كارديو/خطوات)</li>
-                <li>القيام بعمل تحاليل الدم</li>
-                <li>تصوير التمارين للمدرب/ه المختصين</li>
-                <li>تسجيل جميع البيانات وإرسال المتابعة للمدرب كل أسبوعين</li>
+                <li>تصوير التمارين للمدرب</li>
+                <li>تسجيل جميع البيانات وإرسال المتابعة للمدرب كل أسبوع</li>
               </ul>
             </div>
           </div>
@@ -72,35 +69,6 @@ export default function page({params}:{params: Promise<{id: string}>}) {
         </div>
         
         
-        
-
-        {/* Guarantee Section */}
-        <div className='space-y-2'>
-          <h2 className='text-xl font-bold text-right'>الضمان</h2>
-          <div className=' text-right bg-white rounded-xl p-6 border border-gray-200 shadow-md'>
-            <p className='text-gray-700'>
-              * ضمان نزول على الأقل 10 كيلوغرام في 90 يوماً للأوزان فوق ال 100 كيلوغرام (في حال الالتزام بالتعليمات الكاملة)
-            </p>
-            <p className='text-gray-700'>
-              * إذا لم تحصل على تطور وتكن سعيداً بالاشتراك بعد 90 يوم، أنا لست سعيداً بإبقاء أموالك، فستسترد أموالك بالكامل (في حال الالتزام بالتعليمات الكاملة)
-            </p>
-            
-            <div className='mt-6'>
-              <p className='font-semibold mb-4'>الالتزام الكامل بالتعليمات حق أخذ الضمان وهذا يشمل:</p>
-              <ul className='list-disc list-inside space-y-2 mr-4'>
-                <li>الالتزام الكامل بجدول التغذية والتمرين</li>
-                <li>الالتزام الكامل بالنشاط المطلوب (كارديو/خطوات)</li>
-                <li>القيام بعمل تحاليل الدم</li>
-                <li>تصوير التمارين للمدرب/ه المختصين</li>
-                <li>تسجيل جميع البيانات وإرسال المتابعة للمدرب كل أسبوعين</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-
-
-
           <Link href={`/subscribe/${subscription?.id}`} className='bg-accent text-white text-center px-8 py-3 rounded-lg w-full text-xl font-extrabold shadow-lg hover:bg-accent/80 transition-colors'>
             اشترك الآن - {subscription?.price || 399}$
           </Link>
