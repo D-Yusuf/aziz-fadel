@@ -42,7 +42,7 @@ export interface MeasurementQuestion extends BaseQuestion {
   followUp?: (answer: string) => FollowUpQuestion | undefined;
 }
 
-// Question with image and multiple choice
+// Question with image and multiple 
 export interface ImageChoiceQuestion extends BaseQuestion {
   type: 'image-choice';
   image?: string;
