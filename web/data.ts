@@ -168,7 +168,7 @@ export const questions: { male: Question[], female: Question[] } = {
       id: 8,
       type: 'multiple-choice',
       question: "أين سمعت عنا؟" ,
-      options: ["يوتيوب", "اكس", "تيليغرام", "تيكتوك", "أخرى"],
+      options: ["يوتيوب", "سناب جات", "انستقرام", "تيكتوك", "أخرى"],
       answer: "",
       note: "",
       followUp: (answer: string) => answer === "أخرى" ? {
@@ -296,7 +296,7 @@ export const questions: { male: Question[], female: Question[] } = {
       id: 8,
       type: 'multiple-choice',
       question: "أين سمعت عنا؟" ,
-      options: ["يوتيوب", "اكس", "تيليغرام", "تيكتوك", "أخرى"],
+      options: ["يوتيوب", "سناب جات", "انستقرام", "تيكتوك", "أخرى"],
       answer: "",
       note: "",
       followUp: (answer: string) => answer === "أخرى" ? {
@@ -343,7 +343,7 @@ export const subscriptions: Subscription[] = [
     name: "الاشتراك الذهبي",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 399,
-    image: "/placeholder.png",
+    image: "/workout.png",
     type: "عادي"
   },
   {
@@ -351,7 +351,7 @@ export const subscriptions: Subscription[] = [
     name: "اشتراك الطلاب",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 249,
-    image: "/placeholder.png",
+    image: "/workout.png",
     type: "طالب"
   },
 ];
@@ -384,23 +384,18 @@ export const faqData = [
 export const results = [
   {
     image: '/results/1.webp',
-    text: 'العمر ١٧.. زيادة ١١ كيلو'
   },
   {
     image: '/results/2.webp',
-    text: 'العمر ٢٣، نتائج مذهلة بعد ١٢ أسبوع'
   },
   {
     image: '/results/3.webp',
-    text: 'العمر ٢٢، نتائج ١٢ أسبوع'
   },
   {
     image: '/results/4.webp',
-    text: 'العمر ٢٩، تطور ١٢ أسبوع'
   },
   {
     image: '/results/5.webp',
-    text: 'العمر ٢٣، زيادة ٩ كيلو'
   }
 ]
 

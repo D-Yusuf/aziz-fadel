@@ -9,7 +9,7 @@ import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 
 interface Result {
   image: string | StaticImageData;
-  text: string;
+  text?: string;
 }
 
 interface ReviewSwiperProps {
@@ -88,9 +88,11 @@ export default function ReviewSwiper({ results, className = '' }: ReviewSwiperPr
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw rounded-lg"
                 />
               </div>
-              <p className="text-center text-lg mt-auto font-semi-bold whitespace-nowrap">
-                {result.text}
-              </p>
+              {result.text && (
+                <p className="text-center text-lg mt-auto font-semi-bold whitespace-nowrap">
+                  {result.text}
+                </p>
+              )}
             </div>
           </SwiperSlide>
         ))}

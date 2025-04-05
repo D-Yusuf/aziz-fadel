@@ -9,9 +9,7 @@ export default function Reviews() {
   const voiceMessages = [
     '/voices/1.mp3',
     '/voices/2.mp3',
-    '/voices/1.mp3', // Added more for testing scroll
-    '/voices/2.mp3',
-    '/voices/1.mp3',
+
   ];
 
   return (
@@ -27,13 +25,13 @@ export default function Reviews() {
       </div>
       
       {/* Voice Messages */}
-      <div className="w-full px-4 space-y-6">
+      {/* <div className="w-full px-4 space-y-6">
         <div className='space-y-5'>
           <h1 className='text-center text-4xl font-extrabold'>قالوا عن عبدالعزيز</h1>
           <p className='text-center text-gray-500'>بعض من شهادات المشتركين لآرائهم الشخصية عن البرامج المقدمة</p>
         </div>
         <VoiceMessageSwiper voiceMessages={voiceMessages} />
-      </div>
+      </div> */}
     </div>
   )
 }

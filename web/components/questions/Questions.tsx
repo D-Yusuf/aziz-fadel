@@ -15,7 +15,6 @@ interface QuestionsProps {
   currentQuestionIndex: number;
   onAnswer: (answers: Answer[]) => void;
   onNext: () => void;
-  onPrevious: () => void;
 }
 
 export default function Questions({
@@ -23,7 +22,6 @@ export default function Questions({
   currentQuestionIndex,
   onAnswer,
   onNext,
-  onPrevious
 }: QuestionsProps) {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -253,8 +251,8 @@ export default function Questions({
                   const isSelected = date.toDateString() === (selectedDate?.toDateString() || '');
                   const isAvailable = (!minDate || date >= minDate) && (!maxDate || date <= maxDate);
                   
-                  if (isSelected) return 'bg-accent text-white rounded-full';
-                  if (!isAvailable) return 'opacity-50';
+                  if (isSelected) return 'bg-accent text-white rounded-full font-semibold';
+                  if (!isAvailable) return 'text-gray-300';
                   return 'text-black font-semibold';
                 }}
               />

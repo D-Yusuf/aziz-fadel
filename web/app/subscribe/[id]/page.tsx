@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { questions } from '@/data';
+import { questions, subscriptions } from '@/data';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/questions/Header';
 import Questions from '@/components/questions/Questions';
@@ -15,7 +15,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   const id = use(params).id;
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [answers, setAnswers] = useState<Answer[]>([{question: "الباقة", answer: subscriptions[parseInt(id)].name}]);
   const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -29,10 +29,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   useEffect(() => {
     if (step) {
       const stepNum = parseInt(step);
-      if (stepNum === 0) {
-        setGender(null);
-        setCurrentQuestionIndex(0);
-      } else if (!isNaN(stepNum) && stepNum > 0 && gender && stepNum <= currentQuestions.length) {
+      if (!isNaN(stepNum) && stepNum > 0 && gender && stepNum <= currentQuestions.length) {
         setCurrentQuestionIndex(stepNum - 1);
       }
     }
@@ -54,15 +51,15 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   };
 
   const handlePrevious = () => {
+    if(currentQuestionIndex === 0){
+      setGender(null);
+      setSelectedGender(null);
+      setCurrentQuestionIndex(0);
+    }
     if (currentQuestionIndex > 0) {
       const prevStep = currentQuestionIndex;
-      setCurrentQuestionIndex(prev => prev - 1);
+      setCurrentQuestionIndex(curr => curr - 1);
       updateUrlWithStep(prevStep);
-    } else if (gender) {
-      setGender(null);
-      updateUrlWithStep(0);
-    } else {
-      router.push('/');
     }
   };
 
@@ -74,7 +71,6 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
     } else {
       console.log('All questions answered:', answers);
       localStorage.setItem("package", JSON.stringify(answers));
-      localStorage.setItem("previousUrl", window.location.pathname + window.location.search);
       router.push(`/checkout`);
     }
   };
@@ -86,7 +82,7 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   if (!gender) {
     return (
       <div className="min-h-screen max-w-2xl mx-auto p-6">
-        <Header onPrevious={() => {}} progress={progress} />
+        <Header onPrevious={() => {router.push(`/packages/${id}`)}} progress={progress} />
 
         <div className="w-full">
           <h2 className="text-2xl font-bold text-right mb-8">
@@ -128,7 +124,6 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
         currentQuestionIndex={currentQuestionIndex}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        onPrevious={handlePrevious}
       />
     </div>
   );

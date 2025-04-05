@@ -56,7 +56,7 @@ export default function Faq() {
   
 
   return (
-    <div className="w-full mx-auto bg-white  px-4">
+    <div className="w-full mx-auto bg-white ">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">الأسئلة الشائعة</h2>
       <div className="lg:w-2/3 w-full mx-auto">
         {faqData.map((faq, index) => (

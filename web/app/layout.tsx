@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Inter } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -13,6 +16,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const inter = Inter({ subsets: ['latin'] });
+
 export const metadata: Metadata = {
   title: "Aziz Fadil",
   description: "Aziz Fadil",
@@ -20,9 +25,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ar" dir="rtl" className="scroll-smooth">
       <head>
@@ -34,12 +39,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col font-cairo bg-white [&>*]:transition-all [&>*]:duration-300 [&_*]:transition-all [&_*]:duration-300`}
       >
-        {/* <Navbar /> */}
-        <div className="">
-          {children}
-        </div>
-      {/* <Footer /> */}
-
+        {/* <PrevUrlProvider> */}
+          {/* <Navbar /> */}
+          <div className="">
+            {children}
+          </div>
+        {/* <Footer /> */}
+        <Toaster />
+        {/* </PrevUrlProvider> */}
       </body>
     </html>
   );

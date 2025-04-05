@@ -15,57 +15,97 @@ export default function VoiceMessage({ audioSrc, isDisabled = false, onPlay, onP
   const [duration, setDuration] = useState(0);
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
-    if (waveformRef.current) {
-      wavesurferRef.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: isDisabled ? '#e5e7eb' : '#d1d5db', // Lighter gray when disabled
-        progressColor: '#0496FF',
-        cursorWidth: 0,
-        barWidth: 2,
-        barGap: 2,
-        barRadius: 3,
-        height: 30,
-        normalize: true,
-        fillParent: true,
-      });
+    isMountedRef.current = true;
 
-      wavesurferRef.current.load(audioSrc);
+    if (!waveformRef.current) return;
 
-      wavesurferRef.current.on('ready', () => {
-        setDuration(wavesurferRef.current?.getDuration() || 0);
-      });
+    // Create new wavesurfer instance
+    const wavesurfer = WaveSurfer.create({
+      container: waveformRef.current,
+      waveColor: isDisabled ? '#e5e7eb' : '#d1d5db',
+      progressColor: '#0496FF',
+      cursorWidth: 0,
+      barWidth: 2,
+      barGap: 2,
+      barRadius: 3,
+      height: 30,
+      normalize: true,
+      fillParent: true,
+    });
 
-      wavesurferRef.current.on('audioprocess', () => {
-        setCurrentTime(wavesurferRef.current?.getCurrentTime() || 0);
-      });
+    // Store the instance
+    wavesurferRef.current = wavesurfer;
 
-      wavesurferRef.current.on('finish', () => {
+    // Load the audio
+    wavesurfer.load(audioSrc);
+
+    // Set up event listeners
+    wavesurfer.on('ready', () => {
+      if (isMountedRef.current) {
+        setDuration(wavesurfer.getDuration());
+      }
+    });
+
+    wavesurfer.on('audioprocess', () => {
+      if (isMountedRef.current) {
+        setCurrentTime(wavesurfer.getCurrentTime());
+      }
+    });
+
+    wavesurfer.on('finish', () => {
+      if (isMountedRef.current) {
         setIsPlaying(false);
         setCurrentTime(0);
-        wavesurferRef.current?.seekTo(0);
+        wavesurfer.seekTo(0);
         if (onPause) onPause();
-      });
+      }
+    });
 
-      return () => {
-        wavesurferRef.current?.destroy();
-      };
-    }
+    // Cleanup function
+    return () => {
+      isMountedRef.current = false;
+      if (wavesurferRef.current) {
+        try {
+          // Stop any ongoing playback
+          wavesurferRef.current.stop();
+          // Wait a bit before destroying to ensure all operations are complete
+          setTimeout(() => {
+            if (wavesurferRef.current) {
+              wavesurferRef.current.destroy();
+              wavesurferRef.current = null;
+            }
+          }, 100);
+        } catch (error) {
+          console.error('Error cleaning up wavesurfer:', error);
+        }
+      }
+    };
   }, [audioSrc, isDisabled, onPause]);
 
-  const togglePlayPause = () => {
-    if (isDisabled) return;
+  const togglePlayPause = async () => {
+    if (isDisabled || !wavesurferRef.current) return;
     
-    if (wavesurferRef.current) {
+    try {
       if (isPlaying) {
-        wavesurferRef.current.pause();
+        await wavesurferRef.current.pause();
         if (onPause) onPause();
+        setIsPlaying(false);
       } else {
-        wavesurferRef.current.play();
+        // If we're at the end or not playing, reset to start
+        if (currentTime >= duration || !isPlaying) {
+          wavesurferRef.current.seekTo(0);
+          setCurrentTime(0);
+        }
+        await wavesurferRef.current.play();
         if (onPlay) onPlay();
+        setIsPlaying(true);
       }
-      setIsPlaying(!isPlaying);
+    } catch (error) {
+      console.error('Error toggling play/pause:', error);
+      setIsPlaying(false);
     }
   };
 
@@ -79,8 +119,8 @@ export default function VoiceMessage({ audioSrc, isDisabled = false, onPlay, onP
     <div className={`flex items-center gap-4 bg-secondary rounded-2xl p-4 w-full shadow-sm transition-opacity duration-300 ${isDisabled ? 'opacity-50' : 'opacity-100'}`}>
       <button
         onClick={togglePlayPause}
-        disabled={isDisabled}
-        className={`w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-accent/80 transition-colors shrink-0 ${isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-accent cursor-pointer'}`}
+        disabled={isDisabled || !wavesurferRef.current}
+        className={`w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-accent/80 transition-colors shrink-0 ${isDisabled || !wavesurferRef.current ? 'bg-gray-400 cursor-not-allowed' : 'bg-accent cursor-pointer'}`}
       >
         {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} className="ml-1" />}
       </button>
