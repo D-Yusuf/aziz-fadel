@@ -394,7 +394,48 @@ export const results = [
   },
   {
     image: '/results/5.webp',
-  }
+  },
+  {
+    image: '/results/6.webp',
+  },
+  {
+    image: '/results/7.webp',
+  },
+  {
+    image: '/results/8.webp',
+  },
+ {
+  image: '/results/9.jpg',
+ },
+ {
+  image: '/results/10.jpg',
+ },
+ {
+  image: '/results/11.jpg',
+ },
+ {
+  image: '/results/12.jpg',
+ },
+ {
+  image: '/results/13.jpg',
+ },
+ {
+  image: '/results/14.jpg',
+ },
+ {
+  image: '/results/15.jpg',
+ },
+ 
+  
+  
 ]
+
+export const testimonials = [
+  {
+    text: '',
+  },
+  
+]
+
 
 
