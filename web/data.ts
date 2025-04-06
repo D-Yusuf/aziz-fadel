@@ -381,29 +381,27 @@ export const faqData = [
 
 
 export const results = [
+
   {
-    image: '/results/1.webp',
+    image: '/results/2.jpg',
   },
   {
-    image: '/results/2.webp',
+    image: '/results/3.jpeg',
   },
   {
-    image: '/results/3.webp',
+    image: '/results/4.jpg',
   },
   {
-    image: '/results/4.webp',
+    image: '/results/5.jpg',
   },
   {
-    image: '/results/5.webp',
+    image: '/results/6.jpeg',
   },
   {
-    image: '/results/6.webp',
+    image: '/results/7.jpg',
   },
   {
-    image: '/results/7.webp',
-  },
-  {
-    image: '/results/8.webp',
+    image: '/results/8.jpg',
   },
  {
   image: '/results/9.jpg',
@@ -424,6 +422,22 @@ export const results = [
  {
   image: '/results/15.jpg',
  },
+ {
+  image: '/results/16.jpg',
+ },
+ {
+  image: '/results/17.jpg',
+ },
+ {
+  image: '/results/18.jpg',
+ },
+ {
+  image: '/results/19.jpg',
+ },
+ {
+  image: '/results/20.jpeg',
+ },
+ 
  
   
   

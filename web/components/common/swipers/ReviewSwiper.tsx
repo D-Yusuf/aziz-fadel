@@ -93,8 +93,8 @@ export default function ReviewSwiper({ results, className = '' }: ReviewSwiperPr
                   {result.text}
                 </p>
               )}
-              <p className='absolute bottom-0 left-1/4 '>قبل</p>
-              <p className='absolute bottom-0 right-1/4 '>بعد</p>
+              <p className='absolute bottom-2 font-semibold left-1/4 '>قبل</p>
+              <p className='absolute bottom-2 font-semibold right-1/4 '>بعد</p>
             </div>
           </SwiperSlide>
         ))}
