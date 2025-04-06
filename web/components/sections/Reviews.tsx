@@ -29,7 +29,7 @@ export default function Reviews() {
       {/* Testimonials */}
       <div className="w-full px-4 relative space-y-8">
         <div className='space-y-5 max-w-sm mx-auto'>
-          <h1 className='text-center text-4xl font-extrabold'>قالوا عن محمد</h1>
+          <h1 className='text-center text-4xl font-extrabold'>قالوا عن عبدالعزيز</h1>
           <p className='text-center text-gray-500'>آراء المشتركين عن تجربتهم في البرامج المقدمة</p>
         </div>
         <TestimonialsSwiper testimonials={testimonials} />

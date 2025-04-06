@@ -51,17 +51,6 @@ export async function POST(request: Request) {
     });
     yPosition -= 80;
 
-    // Add title to first page
-    const titleWidth = font.widthOfTextAtSize('إجابات الاستبيان', 28);
-    currentPage.drawText('إجابات الاستبيان', {
-      x: (595.28 - titleWidth) / 2,
-      y: yPosition,
-      size: 28,
-      font,
-      color: rgb(0, 0, 0)
-    });
-    yPosition -= 50;
-
     // Add questions and answers
     formData.package.forEach((item: { question: string; answer: string }) => {
       // Check if we need a new page
@@ -72,34 +61,102 @@ export async function POST(request: Request) {
 
       // Add question with larger text and bold styling
       const questionWidth = font.widthOfTextAtSize(item.question, 16);
-      currentPage.drawText(item.question, {
-        x: 550 - questionWidth,
-        y: yPosition,
-        size: 16,
-        font,
-        color: rgb(0, 0, 0)
-      });
-      yPosition -= 30;
+      // Check if question needs to be wrapped
+      if (questionWidth > 500) {
+        const words = item.question.split(' ');
+        let currentLine = '';
+        let lines: string[] = [];
+        
+        words.forEach(word => {
+          const testLine = currentLine + word + ' ';
+          const testWidth = font.widthOfTextAtSize(testLine, 16);
+          
+          if (testWidth > 500) {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine = testLine;
+          }
+        });
+        lines.push(currentLine.trim());
+
+        // Draw each line of the question
+        lines.forEach(line => {
+          if (yPosition < 100) {
+            currentPage = createNewPage();
+            yPosition = 800;
+          }
+          const lineWidth = font.widthOfTextAtSize(line, 16);
+          currentPage.drawText(line, {
+            x: 550 - lineWidth,
+            y: yPosition,
+            size: 16,
+            font,
+            color: rgb(0, 0, 0)
+          });
+          yPosition -= 30;
+        });
+      } else {
+        currentPage.drawText(item.question, {
+          x: 550 - questionWidth,
+          y: yPosition,
+          size: 16,
+          font,
+          color: rgb(0, 0, 0)
+        });
+        yPosition -= 30;
+      }
 
       // Add answer with smaller text
       const answerWidth = font.widthOfTextAtSize(item.answer, 14);
-      currentPage.drawText(item.answer, {
-        x: 550 - answerWidth,
-        y: yPosition,
-        size: 14,
-        font,
-        color: rgb(0.2, 0.2, 0.2)
-      });
-      yPosition -= 40;
+      // Check if answer needs to be wrapped
+      if (answerWidth > 500) {
+        const words = item.answer.split(' ');
+        let currentLine = '';
+        let lines: string[] = [];
+        
+        words.forEach(word => {
+          const testLine = currentLine + word + ' ';
+          const testWidth = font.widthOfTextAtSize(testLine, 14);
+          
+          if (testWidth > 500) {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine = testLine;
+          }
+        });
+        lines.push(currentLine.trim());
 
-      // Add a decorative line between Q&A pairs
-      currentPage.drawLine({
-        start: { x: 40, y: yPosition + 25 },
-        end: { x: 550, y: yPosition + 25 },
-        thickness: 0.5,
-        color: rgb(0.8, 0.8, 0.8)
-      });
-      yPosition -= 30;
+        // Draw each line of the answer
+        lines.forEach(line => {
+          if (yPosition < 100) {
+            currentPage = createNewPage();
+            yPosition = 800;
+          }
+          const lineWidth = font.widthOfTextAtSize(line, 14);
+          currentPage.drawText(line, {
+            x: 550 - lineWidth,
+            y: yPosition,
+            size: 14,
+            font,
+            color: rgb(0.2, 0.2, 0.2)
+          });
+          yPosition -= 20;
+        });
+      } else {
+        currentPage.drawText(item.answer, {
+          x: 550 - answerWidth,
+          y: yPosition,
+          size: 14,
+          font,
+          color: rgb(0.2, 0.2, 0.2)
+        });
+        yPosition -= 20;
+      }
+
+      // Add spacing between Q&A pairs
+      yPosition -= 20;
     });
 
     // Get PDF as buffer
@@ -128,18 +185,29 @@ export async function POST(request: Request) {
       </head>
       <body dir="rtl" style="margin: 0; padding: 0; font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; background-color: #f9fafb;">
         <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
-          <!-- User Info at Top Right -->
-          
-
           <!-- Header with Logo -->
           <div style="text-align: center; margin-bottom: 40px;">
-            <img src="https://aziz-fadel.vercel.app/logo.svg" alt="Aziz Fadel Logo" style="height: 64px; margin-bottom: 24px;">
             <h1 style="color: #111827; font-size: 32px; margin: 0; font-weight: 700;">طلب جديد للتسجيل</h1>
           </div>
           
-          <!-- Customer Information Section -->
-          <div style="background-color: #f9fafb; padding: 32px; border-radius: 16px; margin-bottom: 32px; border: 1px solid #e5e7eb;">
-            <h1>طلب جديد للتسجيل</h1>
+          <!-- User Information -->
+          <div style="background-color: #f9fafb; padding: 24px; border-radius: 12px; margin-bottom: 32px;">
+            <h2 style="color: #111827; font-size: 20px; margin: 0 0 16px 0;">معلومات العميل</h2>
+            <p style="margin: 8px 0; color: #4b5563;">الاسم: ${formData.firstName} ${formData.lastName}</p>
+            <p style="margin: 8px 0; color: #4b5563;">البريد الإلكتروني: ${formData.email}</p>
+            <p style="margin: 8px 0; color: #4b5563;">رقم الهاتف: ${formData.countryCode}${formData.phone}</p>
+            <p style="margin: 8px 0; color: #4b5563;">التاريخ: ${new Date().toLocaleDateString('ar-SA')}</p>
+          </div>
+
+          <!-- Questions and Answers -->
+          <div style="margin-bottom: 32px;">
+            <h2 style="color: #111827; font-size: 20px; margin: 0 0 16px 0;">إجابات الاستبيان</h2>
+            ${formData.package.map((item: { question: string; answer: string }) => `
+              <div style="margin-bottom: 24px;">
+                <h3 style="color: #111827; font-size: 16px; margin: 0 0 8px 0;">${item.question}</h3>
+                <p style="color: #4b5563; margin: 0; line-height: 1.5;">${item.answer}</p>
+              </div>
+            `).join('')}
           </div>
 
           <!-- Footer -->
