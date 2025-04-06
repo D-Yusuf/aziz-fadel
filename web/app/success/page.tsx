@@ -12,7 +12,7 @@ export default function SuccessPage() {
         </div>
         <h1 className="text-3xl font-bold text-gray-900">تم إرسال طلبك بنجاح!</h1>
         <p className="text-lg text-gray-600">
-          شكراً لك. سنتواصل معك قريباً عبر البريد الإلكتروني أو الهاتف.
+          شكراً لك، وسيتم التواصل معك خلال 24-48 ساعة عبر الواتساب أو البريد الإلكتروني.
         </p>
         <Link 
           href="/"
