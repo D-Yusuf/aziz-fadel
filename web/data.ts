@@ -168,7 +168,7 @@ export const questions: { male: Question[], female: Question[] } = {
       id: 8,
       type: 'multiple-choice',
       question: "أين سمعت عنا؟" ,
-      options: ["يوتيوب", "سناب جات", "انستقرام", "تيكتوك", "أخرى"],
+      options: ["انستقرام","يوتيوب", "سناب جات", "تيكتوك", "أخرى"],
       answer: "",
       note: "",
       followUp: (answer: string) => answer === "أخرى" ? {
@@ -184,7 +184,6 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'text-input',
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
-      minLength: 20,
       maxLength: 500,
       note: ""
     },
@@ -312,7 +311,6 @@ export const questions: { male: Question[], female: Question[] } = {
       type: 'text-input',
       question: "ماهي اكثر المشاكل السابقة التي كانت تصعب عليك الوصول لهدفك؟",
       answer: "",
-      minLength: 20,
       maxLength: 500,
       note: ""
     },
