@@ -383,7 +383,7 @@ export const faqData = [
 export const results = [
 
   {
-    image: '/results/2.jpg',
+    image: '/results/2.jpeg',
   },
   {
     image: '/results/3.jpeg',

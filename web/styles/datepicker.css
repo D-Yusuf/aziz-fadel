@@ -84,6 +84,8 @@
   font-size: 0.875rem;
   color: #111827;
   background-color: white;
+  direction: rtl;
+  unicode-bidi: plaintext;
 }
 
 .react-datepicker__input-container input:focus {
@@ -97,6 +99,10 @@
 
 .react-datepicker-popper {
   z-index: 10;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
 }
 
 .react-datepicker__year-dropdown {

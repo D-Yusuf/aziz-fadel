@@ -238,6 +238,7 @@ export default function Questions({
                 calendarClassName="text-right"
                 minDate={currentQuestion.minDate}
                 maxDate={currentQuestion.maxDate}
+                popperPlacement="bottom"
                 filterDate={(date) => {
                   const minDate = currentQuestion.minDate;
                   const maxDate = currentQuestion.maxDate;

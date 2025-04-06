@@ -233,9 +233,9 @@ export default function CheckoutPage() {
                 <label className="block text-lg md:text-xl mb-2 text-right">
                   الهاتف (واتساب) <span className="text-accent">*</span>
                 </label>
-                <div dir="ltr" className="flex gap-2">
+                <div dir="ltr" className="flex flex-col sm:flex-row gap-2">
                   <div className="relative flex items-center" ref={dropdownRef}>
-                    <div className="flex items-center gap-2 px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg h-[50px] min-w-[140px]">
+                    <div className="flex items-center gap-2 px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg h-[50px] w-full sm:w-[140px]">
                     <button
                       type="button"
                       onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
