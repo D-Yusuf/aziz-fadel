@@ -76,7 +76,13 @@ export default function QuestionsPage({params}:{params: Promise<{id: string}>}) 
   };
 
   const handleAnswer = (newAnswers: Answer[]) => {
-    setAnswers(newAnswers);
+    // Keep the package name as the first answer
+    const packageAnswer = answers.find(a => a.question === "الباقة");
+    if (packageAnswer) {
+      setAnswers([packageAnswer, ...newAnswers]);
+    } else {
+      setAnswers(newAnswers);
+    }
   };
 
   if (!gender) {

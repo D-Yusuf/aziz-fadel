@@ -157,12 +157,17 @@ export default function CheckoutPage() {
   };
 
   const handlePrevious = () => {
-    const packageName = JSON.parse(localStorage.getItem('package') || '[]')[0].answer;
-    const packageId = subscriptions.find(subscription => subscription.name === packageName)?.id;
+    const selectedPackage = JSON.parse(localStorage.getItem('package') || '[]')[0].answer || null;
+    if (!selectedPackage) {
+      router.push('/');
+      return;
+    }
+    console.log(selectedPackage);
+    const packageId = subscriptions.find(subscription => subscription.name === selectedPackage)?.id;
     if (storedUrl) {
       router.push(storedUrl);
     } else {
-      packageId ? router.push(`/packages/${packageId}`) : router.push('/');
+      router.push(`/packages/${packageId}`);
     }
   };
 
