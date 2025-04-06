@@ -78,14 +78,14 @@ export default function ReviewSwiper({ results, className = '' }: ReviewSwiperPr
       >
         {results.map((result, index) => (
           <SwiperSlide key={index}>
-            <div className="flex flex-col gap-4 bg-secondary rounded-lg !shadow-sm p-4">
+            <div className="flex flex-col gap-4 bg-secondary rounded-lg !shadow-sm p-1 pb-8">
               <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
                 <Image
                   src={result.image}
                   alt={`Result ${index + 1}`}
                   fill
                   className="object-contain"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw rounded-lg"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw rounded-lg "
                 />
               </div>
               {result.text && (
@@ -93,6 +93,8 @@ export default function ReviewSwiper({ results, className = '' }: ReviewSwiperPr
                   {result.text}
                 </p>
               )}
+              <p className='absolute bottom-0 left-1/4 '>قبل</p>
+              <p className='absolute bottom-0 right-1/4 '>بعد</p>
             </div>
           </SwiperSlide>
         ))}

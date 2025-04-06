@@ -204,7 +204,8 @@ export const questions: { male: Question[], female: Question[] } = {
       value: new Date(), // Today
       minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
       maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-      note: ""
+      note: "يجب أن يكون من أسبوع إلى شهر من تاريخ اليوم"
+
     },
 
   ],
@@ -330,7 +331,7 @@ export const questions: { male: Question[], female: Question[] } = {
       value: new Date(), // Today
       minDate: new Date(new Date().setDate(new Date().getDate() + 7)),
       maxDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-      note: "يجب أن يكون من اسبوع من تاريخ الاشتراك"
+      note: "يجب أن يكون من أسبوع إلى شهر من تاريخ اليوم"
     }
   ]
 };
@@ -341,7 +342,7 @@ export const subscriptions: Subscription[] = [
     name: "الاشتراك الذهبي",
     description: "اشتراك ٣ أشهر تغذية وتمرين",
     price: 399,
-    image: "/workout.png",
+    image: "/workout-gold.png",
     type: "عادي"
   },
   {
@@ -432,9 +433,17 @@ export const results = [
 
 export const testimonials = [
   {
-    text: '',
+    text: 'تطورت تطور ملحوظ في التمرين و الاداء و الاوزان كل اسبوع تزيد القوه و اقدر اشل اکثر من الاسبوع اللي قبله.. و ماكان في توازن في بعض التمارين هالشي تطور عندي و وزني زاد بعد ما كان ثابت تقريباً',
+    name: 'تميم المسيفري',
   },
-  
+  {
+    text: '',
+    name: 'عبدالرحمن',
+  },
+  {
+    text: '',
+    name: 'عبدالرحمن',
+  },
 ]
 
 

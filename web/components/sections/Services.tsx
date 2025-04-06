@@ -7,7 +7,7 @@ import { MdOutlinePermPhoneMsg } from "react-icons/md";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { MdOutlineMarkChatRead } from "react-icons/md";
 import Link from 'next/link'
-import workout from '@/public/workout.png'
+
 export default function Services() {
 
   return (
@@ -34,7 +34,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
     return (
         <div className='flex flex-col relative lg:w-[49%] w-full shadow-sm text-center rounded-md p-5 bg-secondary'>
 
-                <Image  src={workout} alt={subscription.name}  className=' h-64 mx-auto md:object-contain object-cover bg-accent/90 rounded-md' />
+                <Image  src={subscription.image} width={700} height={256} alt={subscription.name}  className=' mx-auto md:object-contain object-cover bg-accent/90 rounded-md' />
                 
           
             <div className='flex flex-col gap-4 py-5 px-5'>
