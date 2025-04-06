@@ -10,7 +10,7 @@ export default function Navbar() {
             <Image src={logo} alt='logo' width={120} height={100}/>
             
         </Link>
-        <Link href='/subscribe'>
+        <Link href='#subscribe'>
             <button className='font-bold px-4 py-2 rounded-md'>تسجيل الدخول</button>
         </Link>
     </nav>
