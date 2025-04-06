@@ -223,7 +223,7 @@ export async function POST(request: Request) {
     // Email options
     const mailOptions = {
       from: `"${formData.firstName} ${formData.lastName}" <${formData.email}>`,
-      to: 'alnasiriyusuf@gmail.com',
+      to: process.env.EMAIL_USER,
       subject: 'طلب جديد للتسجيل',
       html: emailTemplate,
       replyTo: formData.email,
