@@ -14,6 +14,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react-datepicker": "^6.2.0",
     "@wavesurfer/react": "^1.0.10",
+    "axios": "^1.9.0",
     "country-calling-code": "^0.0.3",
     "country-flags": "^0.0.2",
     "country-list": "^2.3.0",

@@ -19,6 +19,15 @@ interface Country {
   dialCode: string;
 }
 
+interface PaymentMethod {
+  PaymentMethodId: number;
+  PaymentMethodAr: string;
+  PaymentMethodEn: string;
+  ImageUrl: string;
+  ServiceCharge: number;
+  TotalAmount: number;
+}
+
 const countries: Country[] = getCountries().map(code => ({
   code,
   name: new Intl.DisplayNames(['ar'], { type: 'region' }).of(code) || code,
@@ -44,6 +53,9 @@ export default function CheckoutPage() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number | null>(null);
+  const [isLoadingPaymentMethods, setIsLoadingPaymentMethods] = useState(true);
 
   const filteredCountries = countries.filter(country => 
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -76,6 +88,55 @@ export default function CheckoutPage() {
     if (url) {
       setStoredUrl(url);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const packageData = JSON.parse(localStorage.getItem('package') || '[]');
+        const selectedPackage = packageData[0].answer;
+        const subscription = subscriptions.find(sub => sub.name === selectedPackage);
+        
+        if (!subscription) {
+          throw new Error('الباقة غير موجودة');
+        }
+
+        const response = await fetch('/api/create-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            price: subscription.price,
+          }),
+        });
+
+        const data = await response.json();
+        console.log('Payment Methods Response:', data);
+
+        if (data.success && Array.isArray(data.paymentMethods)) {
+          // Filter payment methods by specific IDs
+          const allowedIds = [2, 1, 32, 11];
+          const filteredMethods = data.paymentMethods.filter((method: any) => 
+            allowedIds.includes(method.PaymentMethodId)
+          );
+          
+          setPaymentMethods(filteredMethods);
+          if (filteredMethods.length > 0) {
+            setSelectedPaymentMethod(filteredMethods[0].PaymentMethodId);
+          }
+        } else {
+          throw new Error(data.message || 'فشل في جلب طرق الدفع');
+        }
+      } catch (error: any) {
+        console.error('Error fetching payment methods:', error);
+        alert(error.message || 'حدث خطأ أثناء جلب طرق الدفع');
+      } finally {
+        setIsLoadingPaymentMethods(false);
+      }
+    };
+
+    fetchPaymentMethods();
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,11 +172,15 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreedToTerms) {
-      alert('Please agree to the terms and conditions');
+      alert('يرجى الموافقة على الشروط والأحكام');
       return;
     }
     if (phoneError || !formData.phone) {
-      alert('Please enter a valid phone number');
+      alert('يرجى إدخال رقم هاتف صحيح');
+      return;
+    }
+    if (!selectedPaymentMethod) {
+      alert('يرجى اختيار طريقة الدفع');
       return;
     }
     if(!localStorage.getItem('package')){
@@ -126,31 +191,50 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
     try {
       const packageData = JSON.parse(localStorage.getItem('package') || '[]');
-      localStorage.setItem('userInfo', JSON.stringify(formData));
+      const selectedPackage = packageData[0].answer;
+      const subscription = subscriptions.find(sub => sub.name === selectedPackage);
       
-      const response = await fetch('/api/send-email', {
+      if (!subscription) {
+        throw new Error('الباقة غير موجودة');
+      }
+
+      // Execute payment with selected method
+      const paymentResponse = await fetch('/api/execute-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
-          package: packageData
+          price: subscription.price,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.countryCode + formData.phone,
+          paymentMethodId: selectedPaymentMethod,
         }),
       });
 
-      const data = await response.json();
+      const paymentData = await paymentResponse.json();
+      console.log('Payment Response:', paymentData);
 
-      if (data.success) {
-        localStorage.removeItem('package');
-        localStorage.removeItem('userInfo');
-        router.push('/success');
+      if (paymentData.success) {
+        // Store user info and package data
+        localStorage.setItem('userInfo', JSON.stringify({
+          ...formData,
+          package: packageData,
+          subscription: subscription
+        }));
+        
+        // Redirect to payment page
+        window.location.href = paymentData.paymentUrl;
       } else {
-        alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+        // Redirect to error page with message
+        const errorMessage = encodeURIComponent(paymentData.message || 'فشل في إنشاء الدفع');
+        router.push(`/payment-error?message=${errorMessage}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting form:', error);
-      alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+      alert(error.message || 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsSubmitting(false);
     }
@@ -173,26 +257,17 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto p-6">
-      <div className="flex justify-center items-center relative mb-8 ">
-        
-      </div>
-      <div className=" flex flex-col">
-        {/* Header section */}
-        <div className="p-4 md:p-6">
-          <div className="max-w-2xl mx-auto flex justify-center relative items-center">
-            <div className="w-8" />
-         
-            <h1 className="text-2xl md:text-3xl font-bold">ارسال طلب التسجيل</h1>
+      <div className="flex justify-center items-center relative mb-8">
         <button 
           onClick={handlePrevious}
           className="absolute right-0 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors"
         >
           <FaArrowRight className="w-6 h-6 text-gray-600" />
         </button>
-          </div>
-        </div>
+        <h1 className="text-2xl md:text-3xl font-bold">ارسال طلب التسجيل</h1>
+      </div>
 
-        {/* Form section */}
+      <div className="flex flex-col">
         <div className="flex-1 flex items-start">
           <div className="w-full max-w-2xl mx-auto p-4 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -236,15 +311,15 @@ export default function CheckoutPage() {
                 <div dir="ltr" className="flex flex-col sm:flex-row gap-2">
                   <div className="relative flex items-center" ref={dropdownRef}>
                     <div className="flex items-center gap-2 px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg h-[50px] w-full sm:w-[140px]">
-                    <button
-                      type="button"
-                      onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                      className=" hover:bg-gray-50"
-                    >
-                      <IoIosArrowDown 
-                        className={`w-5 h-5 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`}
-                      />
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                        className="hover:bg-gray-50"
+                      >
+                        <IoIosArrowDown 
+                          className={`w-5 h-5 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
                       <img
                         src={countryImage}
                         alt="Country flag"
@@ -260,10 +335,7 @@ export default function CheckoutPage() {
                             type="text"
                             placeholder="ابحث عن الدولة أو الرمز"
                             value={searchTerm}
-                            onChange={(e) => {
-                              setSearchTerm(e.target.value);
-                              
-                            }}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="text-right w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent text-lg"
                           />
                         </div>
@@ -278,7 +350,6 @@ export default function CheckoutPage() {
                                   countryCode: country.dialCode,
                                   country: country.name
                                 }));
-                                // handlePhoneChange(country.dialCode);
                                 setCountryImage(`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`);
                                 setIsCountryDropdownOpen(false);
                               }}
@@ -286,7 +357,6 @@ export default function CheckoutPage() {
                             >
                               <img
                                 src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/48x36/${country.code.toLowerCase()}.png 2x`}
                                 alt={`${country.name} flag`}
                                 className="w-6 h-4"
                               />
@@ -333,6 +403,43 @@ export default function CheckoutPage() {
                 />
               </div>
 
+              {/* Payment Methods */}
+              <div>
+                <label className="block text-lg md:text-xl mb-2 text-right">
+                  طريقة الدفع <span className="text-accent">*</span>
+                </label>
+                {isLoadingPaymentMethods ? (
+                  <div className="text-center py-4">
+                    <p className="text-gray-600">جاري تحميل طرق الدفع...</p>
+                  </div>
+                ) : paymentMethods.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {paymentMethods.map((method) => (
+                      <button
+                        key={method.PaymentMethodId}
+                        type="button"
+                        onClick={() => setSelectedPaymentMethod(method.PaymentMethodId)}
+                        className={`p-4 border-2 rounded-lg transition-colors duration-200 ${
+                          selectedPaymentMethod === method.PaymentMethodId
+                            ? 'border-accent bg-accent/5'
+                            : 'border-gray-200 hover:border-accent'
+                        }`}
+                      >
+                        <div className="flex items-center justify-center h-12">
+                          <img
+                            src={method.ImageUrl}
+                            alt={method.PaymentMethodAr}
+                            className="h-8 object-contain"
+                          />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-red-500 text-center">لا توجد طرق دفع متاحة</p>
+                )}
+              </div>
+
               {/* Terms and Conditions */}
               <div className="flex items-center gap-2">
                 <label className="text-lg md:text-xl">
@@ -345,14 +452,6 @@ export default function CheckoutPage() {
                   className="w-5 h-5 rounded border-gray-300 text-accent focus:ring-accent"
                 />
               </div>
-
-              {/* ReCAPTCHA */}
-              {/* <div className="flex justify-center">
-                <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-                  onChange={(value) => setRecaptchaValue(value)}
-                />
-              </div> */}
 
               {/* Submit Button */}
               <button

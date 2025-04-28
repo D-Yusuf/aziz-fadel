@@ -224,7 +224,7 @@ export async function POST(request: Request) {
     const mailOptions = {
       from: `"${formData.firstName} ${formData.lastName}" <${formData.email}>`,
       to: process.env.EMAIL_USER,
-      subject: 'طلب جديد للتسجيل',
+      subject: 'تسجيل جديد',
       html: emailTemplate,
       replyTo: formData.email,
       attachments: [

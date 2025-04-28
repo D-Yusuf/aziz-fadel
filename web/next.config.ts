@@ -9,7 +9,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-  }
+  },
+  env: {
+    NEXT_PUBLIC_BASE_URL: "https://aziz-fadel.vercel.app",
+  },
 };
 
 export default nextConfig;
