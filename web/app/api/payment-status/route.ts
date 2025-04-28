@@ -7,10 +7,7 @@ export async function POST(request: Request) {
 
     // MyFatoorah API configuration
     const apiKey = process.env.MYFATOORAH_API_KEY;
-    const isTest = true;
-    const baseUrl = isTest 
-      ? 'https://apitest.myfatoorah.com'
-      : 'https://api.myfatoorah.com';
+    const baseUrl = process.env.NEXT_PUBLIC_MYFATOORAH_TEST_URL;
 
     // Get payment status
     const response = await axios.post(

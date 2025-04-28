@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_BASE_URL: "https://aziz-fadel.vercel.app",
+    NEXT_PUBLIC_MYFATOORAH_TEST_URL: "https://apitest.myfatoorah.com",
+    NEXT_PUBLIC_MYFATOORAH_PROD_URL: "https://api.myfatoorah.com",
   },
 };
 
