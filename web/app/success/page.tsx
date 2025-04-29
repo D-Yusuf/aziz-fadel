@@ -12,12 +12,12 @@ export default function SuccessPage() {
         </div>
         <h1 className="text-3xl font-bold text-gray-900">تم الاشتراك بنجاح!</h1>
         <p className='text-gray-500'>سيتم التواصل معكم قريبا</p>
-       <div className='flex justify-center gap-4'>
+       <div className='flex flex-wrap justify-center gap-4'>
         <Link 
-          href="https://api.whatsapp.com/send?phone=96566423638"
+          href="https://api.whatsapp.com/send?phone=96567056297"
           className=" text-lg flex w-fit text-center items-center gap-2 bg-accent text-white p-3 rounded-lg hover:bg-accent/80 transition-colors"
         >
-          <p>تواصل معنا</p>
+          <p>التواصل مع المدرب</p>
           <FaWhatsapp className="size-10" />
         </Link>
         <Link 
