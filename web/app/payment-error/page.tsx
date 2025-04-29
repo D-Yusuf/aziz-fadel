@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-export default function PaymentErrorPage() {
+export default function page() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>('');
