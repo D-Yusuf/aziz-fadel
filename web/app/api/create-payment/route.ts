@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     // MyFatoorah API configuration
     const apiKey = process.env.MYFATOORAH_API_KEY;
-    const baseUrl = process.env.NEXT_PUBLIC_MYFATOORAH_TEST_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_MYFATOORAH_PROD_URL;
 
     // Step 1: Initiate Payment to get available payment methods
     const initiateResponse = await axios.post(
