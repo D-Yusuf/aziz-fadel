@@ -156,6 +156,7 @@ export default function CheckoutPage() {
       ...prev,
       [name]: value
     }));
+    console.log(formData);
   };
 
   const handlePhoneChange = (value: string) => {
@@ -182,6 +183,7 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formData);
     if (!agreedToTerms) {
       alert('يرجى الموافقة على الشروط والأحكام');
       return;
@@ -387,6 +389,7 @@ export default function CheckoutPage() {
                     onChange={(e) => {
                       const numericValue = e.target.value.replace(/[^0-9]/g, '');
                       handlePhoneChange(numericValue);
+                      
                     }}
                     pattern="[0-9]*"
                     inputMode="numeric"

@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         ErrorUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-error`,
         CustomerName: `${firstName} ${lastName}`,
         CustomerEmail: email,
-        CustomerMobile: phone.replace('+', ''),
+        // CustomerMobile: phone.replace('+', ''),
         Language: 'ar',
         DisplayCurrencyIso: 'USD',
         InvoiceReference: `INV-${Date.now()}`,
