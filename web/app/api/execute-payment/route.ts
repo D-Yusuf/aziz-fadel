@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       `${baseUrl}/v2/ExecutePayment`,
       {
         PaymentMethodId: paymentMethodId,
-        InvoiceValue: price,
+        InvoiceValue: 0.01,
         CallBackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success`,
         ErrorUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-error`,
         CustomerName: `${firstName} ${lastName}`,
