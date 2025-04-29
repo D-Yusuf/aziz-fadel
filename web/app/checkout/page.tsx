@@ -56,6 +56,7 @@ export default function CheckoutPage() {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number | null>(null);
   const [isLoadingPaymentMethods, setIsLoadingPaymentMethods] = useState(true);
+  const [subscription, setSubscription] = useState<any>(null);
 
   const filteredCountries = countries.filter(country => 
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -137,6 +138,16 @@ export default function CheckoutPage() {
     };
 
     fetchPaymentMethods();
+  }, []);
+
+  useEffect(() => {
+    const packageData = JSON.parse(localStorage.getItem('package') || '[]');
+    const selectedPackage = packageData[0].answer;
+    const subscription = subscriptions.find(sub => sub.name === selectedPackage);
+    
+    if (subscription) {
+      setSubscription(subscription);
+    }
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -401,6 +412,30 @@ export default function CheckoutPage() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-right text-lg md:text-xl"
                 />
+              </div>
+
+              {/* Order Summary */}
+              <div className="bg-gray-50 p-6 rounded-lg mb-8">
+                <h2 className="text-xl font-semibold mb-4 text-right">ملخص الطلب</h2>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 relative">
+                      <Image
+                        src={subscription?.image || '/workout.png'}
+                        alt={subscription?.name || 'Package'}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="text-right">
+                      <h3 className="text-lg font-medium">{subscription?.name}</h3>
+                      <p className="text-gray-600">{subscription?.description}</p>
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xl font-semibold">${subscription?.price}</p>
+                  </div>
+                </div>
               </div>
 
               {/* Payment Methods */}
