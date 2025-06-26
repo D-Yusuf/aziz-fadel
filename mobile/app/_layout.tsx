@@ -3,8 +3,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { I18nManager } from 'react-native';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+// Force RTL for Arabic
+I18nManager.forceRTL(true);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -21,6 +25,8 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="edit-workout" options={{ headerShown: false }} />
+        <Stack.Screen name="active-workout" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
