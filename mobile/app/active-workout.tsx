@@ -10,16 +10,10 @@ import {
   Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
-interface Exercise {
-  id: string;
-  name: string;
-  sets: number;
-  reps: string;
-  completedSets: SetData[];
-}
+import { WorkoutDay, Exercise } from '@/constants/workoutData';
 
 interface SetData {
   id: string;
@@ -28,105 +22,54 @@ interface SetData {
   completed: boolean;
 }
 
+interface ActiveExercise extends Exercise {
+  setsData: SetData[];
+}
+
 export default function ActiveWorkoutScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const params = useLocalSearchParams();
-  const dayId = params.dayId as string;
-  const dayName = params.dayName as string;
+  const day: WorkoutDay = JSON.parse(params.day as string);
 
-  const [exercises, setExercises] = useState<Exercise[]>([
-    {
-      id: '1',
-      name: 'ضغط البنش',
-      sets: 3,
-      reps: '8-12',
-      completedSets: [
-        { id: '1-1', weight: '', reps: '', completed: false },
-        { id: '1-2', weight: '', reps: '', completed: false },
-        { id: '1-3', weight: '', reps: '', completed: false },
-      ],
-    },
-    {
-      id: '2',
-      name: 'الضغط العسكري',
-      sets: 3,
-      reps: '8-12',
-      completedSets: [
-        { id: '2-1', weight: '', reps: '', completed: false },
-        { id: '2-2', weight: '', reps: '', completed: false },
-        { id: '2-3', weight: '', reps: '', completed: false },
-      ],
-    },
-    {
-      id: '3',
-      name: 'البار المائل',
-      sets: 3,
-      reps: '8-12',
-      completedSets: [
-        { id: '3-1', weight: '', reps: '', completed: false },
-        { id: '3-2', weight: '', reps: '', completed: false },
-        { id: '3-3', weight: '', reps: '', completed: false },
-      ],
-    },
-    {
-      id: '4',
-      name: 'الترايسبس',
-      sets: 3,
-      reps: '10-15',
-      completedSets: [
-        { id: '4-1', weight: '', reps: '', completed: false },
-        { id: '4-2', weight: '', reps: '', completed: false },
-        { id: '4-3', weight: '', reps: '', completed: false },
-      ],
-    },
-  ]);
-
+  const [exercises, setExercises] = useState<ActiveExercise[]>(() => 
+    day.exercises.map(ex => ({
+      ...ex,
+      setsData: Array.from({ length: ex.sets }, (_, i) => ({
+        id: `${ex.id}-set-${i}`,
+        weight: '',
+        reps: '',
+        completed: false,
+      })),
+    }))
+  );
+  
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
-  const handleSetUpdate = (exerciseId: string, setId: string, field: 'weight' | 'reps', value: string) => {
-    setExercises(exercises.map(ex => {
-      if (ex.id === exerciseId) {
-        return {
-          ...ex,
-          completedSets: ex.completedSets.map(set => 
-            set.id === setId ? { ...set, [field]: value } : set
-          ),
-        };
-      }
-      return ex;
-    }));
+  const handleSetUpdate = (exIndex: number, setIndex: number, field: 'weight' | 'reps', value: string) => {
+    const newExercises = [...exercises];
+    newExercises[exIndex].setsData[setIndex][field] = value;
+    setExercises(newExercises);
   };
 
-  const handleSetComplete = (exerciseId: string, setId: string) => {
-    setExercises(exercises.map(ex => {
-      if (ex.id === exerciseId) {
-        return {
-          ...ex,
-          completedSets: ex.completedSets.map(set => 
-            set.id === setId ? { ...set, completed: !set.completed } : set
-          ),
-        };
-      }
-      return ex;
-    }));
+  const handleSetComplete = (exIndex: number, setIndex: number) => {
+    const newExercises = [...exercises];
+    const currentStatus = newExercises[exIndex].setsData[setIndex].completed;
+    newExercises[exIndex].setsData[setIndex].completed = !currentStatus;
+    setExercises(newExercises);
   };
 
   const handleFinishWorkout = () => {
-    const totalSets = exercises.reduce((acc, ex) => acc + ex.sets, 0);
-    const completedSets = exercises.reduce((acc, ex) => 
-      acc + ex.completedSets.filter(set => set.completed).length, 0
-    );
-
     Alert.alert(
       'إنهاء التمرين',
-      `أكملت ${completedSets} من أصل ${totalSets} مجموعة\nهل تريد إنهاء التمرين؟`,
+      'هل أنت متأكد من أنك تريد إنهاء هذا التمرين؟',
       [
         { text: 'إلغاء', style: 'cancel' },
         { 
           text: 'إنهاء', 
+          style: 'destructive',
           onPress: () => {
-            Alert.alert('تم إنهاء التمرين', 'أحسنت! لقد أكملت تمرينك بنجاح', [
+            Alert.alert('أحسنت!', 'لقد أكملت تمرينك بنجاح.', [
               { text: 'حسناً', onPress: () => router.back() }
             ]);
           }
@@ -134,112 +77,85 @@ export default function ActiveWorkoutScreen() {
       ]
     );
   };
-
-  const renderExercise = (exercise: Exercise, index: number) => (
-    <View key={exercise.id} style={[styles.exerciseCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      <View style={styles.exerciseHeader}>
-        <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
-        <Text style={[styles.exerciseTarget, { color: colors.text + '80' }]}>
-          الهدف: {exercise.sets} مجموعات × {exercise.reps} تكرار
-        </Text>
-      </View>
-
-      <View style={styles.setsContainer}>
-        {exercise.completedSets.map((set, setIndex) => (
-          <View key={set.id} style={styles.setRow}>
-            <Text style={[styles.setNumber, { color: colors.text }]}>المجموعة {setIndex + 1}</Text>
-            
-            <View style={styles.setInputs}>
-              <View style={styles.inputGroup}>
-                <Text style={[styles.inputLabel, { color: colors.text }]}>الوزن (كجم)</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { 
-                      backgroundColor: colors.background, 
-                      color: colors.text, 
-                      borderColor: colors.border,
-                      opacity: set.completed ? 0.6 : 1
-                    }
-                  ]}
-                  value={set.weight}
-                  onChangeText={(text) => handleSetUpdate(exercise.id, set.id, 'weight', text)}
-                  placeholder="0"
-                  placeholderTextColor={colors.text + '80'}
-                  keyboardType="numeric"
-                  editable={!set.completed}
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={[styles.inputLabel, { color: colors.text }]}>التكرارات</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { 
-                      backgroundColor: colors.background, 
-                      color: colors.text, 
-                      borderColor: colors.border,
-                      opacity: set.completed ? 0.6 : 1
-                    }
-                  ]}
-                  value={set.reps}
-                  onChangeText={(text) => handleSetUpdate(exercise.id, set.id, 'reps', text)}
-                  placeholder="0"
-                  placeholderTextColor={colors.text + '80'}
-                  keyboardType="numeric"
-                  editable={!set.completed}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={[
-                styles.completeButton,
-                set.completed ? { backgroundColor: colors.tint } : { borderColor: colors.tint, borderWidth: 1 }
-              ]}
-              onPress={() => handleSetComplete(exercise.id, set.id)}
-            >
-              <Text style={[
-                styles.completeButtonText,
-                { color: set.completed ? '#fff' : colors.tint }
-              ]}>
-                {set.completed ? '✓' : 'إكمال'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
+  
+  const currentExercise = exercises[currentExerciseIndex];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Text style={[styles.backButtonText, { color: colors.tint }]}>← رجوع</Text>
+        <TouchableOpacity style={styles.headerButton} onPress={() => router.back()}>
+          <MaterialCommunityIcons name="window-close" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>التمرين النشط</Text>
-        <View style={styles.placeholder} />
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{currentExercise.name}</Text>
+        <TouchableOpacity style={styles.headerButton} onPress={() => {}}>
+          <MaterialCommunityIcons name="dots-horizontal" size={24} color={colors.text} />
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.dayInfo}>
-        <Text style={[styles.dayName, { color: colors.text }]}>{dayName}</Text>
-      </View>
-
-      <ScrollView style={styles.content}>
-        {exercises.map((exercise, index) => renderExercise(exercise, index))}
-
-        <TouchableOpacity
-          style={[styles.finishButton, { backgroundColor: colors.tint }]}
-          onPress={handleFinishWorkout}
-        >
-          <Text style={[styles.finishButtonText, { color: '#fff' }]}>إنهاء التمرين</Text>
-        </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.content}>
+        {currentExercise.setsData.map((set, setIndex) => (
+          <View key={set.id} style={styles.setContainer}>
+            <View style={styles.setRow}>
+              <Text style={[styles.setTitle, { color: set.completed ? colors.tint : colors.text }]}>
+                Set {setIndex + 1}
+              </Text>
+              <TouchableOpacity onPress={() => handleSetComplete(currentExerciseIndex, setIndex)}>
+                <MaterialCommunityIcons 
+                  name={set.completed ? "check-circle" : "checkbox-blank-circle-outline"}
+                  size={28} 
+                  color={set.completed ? colors.tint : colors.border} 
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <TextInput
+                style={[styles.input, { color: colors.text }]}
+                placeholder="Weight"
+                placeholderTextColor={colors.text + '80'}
+                keyboardType="numeric"
+                value={set.weight}
+                onChangeText={(text) => handleSetUpdate(currentExerciseIndex, setIndex, 'weight', text)}
+              />
+              <TextInput
+                style={[styles.input, { color: colors.text }]}
+                placeholder="Reps"
+                placeholderTextColor={colors.text + '80'}
+                keyboardType="numeric"
+                value={set.reps}
+                onChangeText={(text) => handleSetUpdate(currentExerciseIndex, setIndex, 'reps', text)}
+              />
+            </View>
+          </View>
+        ))}
       </ScrollView>
+
+      <View style={styles.footer}>
+        <TouchableOpacity 
+          style={[styles.navButton, { opacity: currentExerciseIndex === 0 ? 0.5 : 1 }]}
+          disabled={currentExerciseIndex === 0}
+          onPress={() => setCurrentExerciseIndex(currentExerciseIndex - 1)}
+        >
+          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+          <Text style={[styles.navButtonText, { color: colors.text }]}>السابق</Text>
+        </TouchableOpacity>
+        
+        {currentExerciseIndex < exercises.length - 1 ? (
+          <TouchableOpacity 
+            style={styles.navButton}
+            onPress={() => setCurrentExerciseIndex(currentExerciseIndex + 1)}
+          >
+            <Text style={[styles.navButtonText, { color: colors.text }]}>التالي</Text>
+            <MaterialCommunityIcons name="arrow-right" size={24} color={colors.text} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity 
+            style={[styles.finishButton, { backgroundColor: colors.tint }]}
+            onPress={handleFinishWorkout}
+          >
+            <Text style={[styles.finishButtonText, { color: '#fff' }]}>إنهاء</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -250,116 +166,72 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
     paddingTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
-  backButton: {
+  headerButton: {
     padding: 5,
   },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  title: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  placeholder: {
-    width: 60,
-  },
-  dayInfo: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    alignItems: 'center',
-  },
-  dayName: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
   },
   content: {
-    flex: 1,
     padding: 20,
   },
-  exerciseCard: {
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  exerciseHeader: {
-    marginBottom: 15,
-  },
-  exerciseName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  exerciseTarget: {
-    fontSize: 14,
-  },
-  setsContainer: {
-    gap: 10,
+  setContainer: {
+    marginBottom: 30,
   },
   setRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 10,
+    marginBottom: 10,
   },
-  setNumber: {
-    fontSize: 14,
-    fontWeight: '600',
-    minWidth: 80,
+  setTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
   },
-  setInputs: {
-    flex: 1,
+  inputContainer: {
     flexDirection: 'row',
-    gap: 10,
-  },
-  inputGroup: {
-    flex: 1,
-  },
-  inputLabel: {
-    fontSize: 12,
-    marginBottom: 2,
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    borderWidth: 1,
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 6,
-    padding: 8,
-    fontSize: 14,
+    flex: 1,
+    padding: 20,
+    fontSize: 18,
+    textAlign: 'center',
   },
-  completeButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-    minWidth: 60,
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
   },
-  completeButtonText: {
-    fontSize: 12,
+  navButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  navButtonText: {
+    fontSize: 16,
     fontWeight: '600',
   },
   finishButton: {
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 25,
   },
   finishButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 }); 

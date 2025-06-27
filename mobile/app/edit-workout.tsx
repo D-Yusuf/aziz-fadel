@@ -10,15 +10,19 @@ import {
   Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Exercise, workoutData } from '@/constants/workoutData';
 
+/*
 interface Exercise {
   id: string;
   name: string;
   sets: number;
   reps: string;
 }
+*/
 
 const exerciseDatabase = [
   'ضغط البنش',
@@ -41,22 +45,49 @@ export default function EditWorkoutScreen() {
   const params = useLocalSearchParams();
   const dayId = params.dayId as string;
   const dayName = params.dayName as string;
+  const currentExercise: Exercise = JSON.parse(params.exercise as string);
 
-  const [exercises, setExercises] = useState<Exercise[]>([
-    { id: '1', name: 'ضغط البنش', sets: 3, reps: '8-12' },
-    { id: '2', name: 'الضغط العسكري', sets: 3, reps: '8-12' },
-    { id: '3', name: 'البار المائل', sets: 3, reps: '8-12' },
-    { id: '4', name: 'الترايسبس', sets: 3, reps: '10-15' },
-  ]);
+  const allExercises = workoutData
+    .flatMap(week => week.days)
+    .flatMap(day => day.exercises)
+    .filter((value, index, self) => self.findIndex(t => t.id === value.id) === index)
+    .filter(ex => ex.id !== currentExercise.id);
+  
+  const [searchText, setSearchText] = useState('');
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>(allExercises);
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    if (text) {
+      const filtered = allExercises.filter(ex => 
+        ex.name.toLowerCase().includes(text.toLowerCase()) ||
+        ex.muscle.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredExercises(filtered);
+    } else {
+      setFilteredExercises(allExercises);
+    }
+  };
+
+  const handleSelectExercise = (exercise: Exercise) => {
+    // Here you would typically update the state in your main workout screen
+    // For now, we just go back
+    console.log('Selected new exercise:', exercise);
+    router.back();
+  };
 
   const handleAddExercise = () => {
+    // This is a placeholder for adding a new exercise from a list
+    // For now, it adds a pre-defined exercise
     const newExercise: Exercise = {
-      id: Date.now().toString(),
-      name: 'تمرين جديد',
+      id: `new-${Date.now()}`,
+      name: 'New Custom Exercise',
+      muscle: 'Custom',
       sets: 3,
-      reps: '8-12',
+      reps: '10',
+      rest: '60s'
     };
-    setExercises([...exercises, newExercise]);
+    setFilteredExercises([...filteredExercises, newExercise]);
   };
 
   const handleRemoveExercise = (id: string) => {
@@ -68,14 +99,14 @@ export default function EditWorkoutScreen() {
         {
           text: 'حذف',
           style: 'destructive',
-          onPress: () => setExercises(exercises.filter(ex => ex.id !== id)),
+          onPress: () => setFilteredExercises(filteredExercises.filter(ex => ex.id !== id)),
         },
       ]
     );
   };
 
   const handleUpdateExercise = (id: string, field: keyof Exercise, value: string | number) => {
-    setExercises(exercises.map(ex => 
+    setFilteredExercises(filteredExercises.map(ex => 
       ex.id === id ? { ...ex, [field]: value } : ex
     ));
   };
@@ -87,90 +118,49 @@ export default function EditWorkoutScreen() {
     ]);
   };
 
-  const renderExerciseItem = (exercise: Exercise) => (
-    <View key={exercise.id} style={[styles.exerciseCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      <View style={styles.exerciseHeader}>
-        <Text style={[styles.exerciseTitle, { color: colors.text }]}>التمرين {exercise.id}</Text>
-        <TouchableOpacity
-          style={[styles.removeButton, { backgroundColor: '#ff4444' }]}
-          onPress={() => handleRemoveExercise(exercise.id)}
-        >
-          <Text style={[styles.removeButtonText, { color: '#fff' }]}>حذف</Text>
-        </TouchableOpacity>
+  const renderExerciseCard = (exercise: Exercise) => (
+    <TouchableOpacity key={exercise.id} style={[styles.exerciseCard, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => handleSelectExercise(exercise)}>
+      <MaterialCommunityIcons name="dumbbell" size={30} color={colors.text} style={styles.exerciseIcon} />
+      <View style={styles.exerciseDetails}>
+        <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
+        <Text style={[styles.exerciseMuscle, { color: colors.text + '90' }]}>{exercise.muscle}</Text>
       </View>
-
-      <View style={styles.inputGroup}>
-        <Text style={[styles.inputLabel, { color: colors.text }]}>اسم التمرين</Text>
-        <TextInput
-          style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-          value={exercise.name}
-          onChangeText={(text) => handleUpdateExercise(exercise.id, 'name', text)}
-          placeholder="أدخل اسم التمرين"
-          placeholderTextColor={colors.text + '80'}
-        />
-      </View>
-
-      <View style={styles.row}>
-        <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
-          <Text style={[styles.inputLabel, { color: colors.text }]}>عدد المجموعات</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-            value={exercise.sets.toString()}
-            onChangeText={(text) => handleUpdateExercise(exercise.id, 'sets', parseInt(text) || 0)}
-            placeholder="3"
-            placeholderTextColor={colors.text + '80'}
-            keyboardType="numeric"
-          />
-        </View>
-
-        <View style={[styles.inputGroup, { flex: 1 }]}>
-          <Text style={[styles.inputLabel, { color: colors.text }]}>عدد التكرارات</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-            value={exercise.reps}
-            onChangeText={(text) => handleUpdateExercise(exercise.id, 'reps', text)}
-            placeholder="8-12"
-            placeholderTextColor={colors.text + '80'}
-          />
-        </View>
-      </View>
-    </View>
+      <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text} />
+    </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Text style={[styles.backButtonText, { color: colors.tint }]}>← رجوع</Text>
+        <TouchableOpacity onPress={() => router.back()}>
+          <MaterialCommunityIcons name="chevron-left" size={30} color={colors.tint} />
         </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>تعديل التمارين</Text>
-        <View style={styles.placeholder} />
+        <Text style={[styles.title, { color: colors.text }]}>Change Exercise</Text>
+        <View style={{ width: 30 }} />
       </View>
 
-      <View style={styles.dayInfo}>
-        <Text style={[styles.dayName, { color: colors.text }]}>{dayName}</Text>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={[styles.searchInput, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+          placeholder="Search for an exercise"
+          placeholderTextColor={colors.text + '80'}
+          value={searchText}
+          onChangeText={handleSearch}
+        />
       </View>
-
-      <ScrollView style={styles.content}>
-        {exercises.map(renderExerciseItem)}
-
-        <TouchableOpacity
-          style={[styles.addButton, { backgroundColor: colors.tint }]}
-          onPress={handleAddExercise}
-        >
-          <Text style={[styles.addButtonText, { color: '#fff' }]}>+ إضافة تمرين جديد</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.saveButton, { backgroundColor: colors.tint }]}
-          onPress={handleSave}
-        >
-          <Text style={[styles.saveButtonText, { color: '#fff' }]}>حفظ التغييرات</Text>
-        </TouchableOpacity>
+      
+      <ScrollView contentContainerStyle={styles.listContainer}>
+        <Text style={[styles.subHeader, { color: colors.text }]}>Alternatives for {currentExercise.name}</Text>
+        {filteredExercises.map(renderExerciseCard)}
       </ScrollView>
+
+      <TouchableOpacity
+        style={[styles.addButton, { backgroundColor: colors.tint }]}
+        onPress={handleAddExercise}
+      >
+        <Text style={[styles.addButtonText, { color: '#fff' }]}>إضافة تمرين جديد</Text>
+      </TouchableOpacity>
+
     </SafeAreaView>
   );
 }
@@ -185,104 +175,63 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingTop: 10,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
-  placeholder: {
-    width: 60,
+  searchContainer: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
-  dayInfo: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    alignItems: 'center',
+  searchInput: {
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
   },
-  dayName: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  content: {
-    flex: 1,
+  listContainer: {
     padding: 20,
   },
+  subHeader: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 20,
+  },
   exerciseCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-  exerciseHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
+  exerciseIcon: {
+    marginRight: 15,
   },
-  exerciseTitle: {
+  exerciseDetails: {
+    flex: 1,
+  },
+  exerciseName: {
     fontSize: 16,
     fontWeight: 'bold',
   },
-  removeButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  removeButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  inputLabel: {
+  exerciseMuscle: {
     fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-  },
-  row: {
-    flexDirection: 'row',
+    opacity: 0.8,
   },
   addButton: {
-    paddingVertical: 15,
+    margin: 20,
+    padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20,
   },
   addButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-  },
-  saveButton: {
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  saveButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 }); 
