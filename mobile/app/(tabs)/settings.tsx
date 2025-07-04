@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import i18n from '@/localization';
+import { I18nManager } from 'react-native';
+import * as Updates from 'expo-updates';
 
 interface SettingItem {
   id: string;
@@ -29,88 +33,114 @@ export default function SettingsScreen() {
   const [darkMode, setDarkMode] = useState(colorScheme === 'dark');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
+  const tabBarHeight = useBottomTabBarHeight();
+
+  const handleLanguageChange = async (lang: 'en' | 'ar') => {
+    i18n.locale = lang;
+    const isRTL = lang === 'ar';
+    I18nManager.forceRTL(isRTL);
+    I18nManager.allowRTL(isRTL);
+    await Updates.reloadAsync();
+  };
 
   const handleExportData = () => {
-    Alert.alert('تصدير البيانات', 'سيتم تصدير جميع بياناتك قريباً');
+    Alert.alert(i18n.t('exportDataAlert'), i18n.t('exportDataMessage'));
   };
 
   const handleBackupData = () => {
-    Alert.alert('نسخ احتياطي', 'سيتم إنشاء نسخة احتياطية من بياناتك');
+    Alert.alert(i18n.t('backupAlert'), i18n.t('backupMessage'));
   };
 
   const handleClearData = () => {
     Alert.alert(
-      'مسح البيانات',
-      'هل أنت متأكد من أنك تريد مسح جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه.',
+      i18n.t('clearDataAlert'),
+      i18n.t('clearDataMessage'),
       [
-        { text: 'إلغاء', style: 'cancel' },
-        { text: 'مسح', style: 'destructive', onPress: () => Alert.alert('تم المسح', 'تم مسح جميع البيانات') },
+        { text: i18n.t('cancel'), style: 'cancel' },
+        { text: i18n.t('clear'), style: 'destructive', onPress: () => Alert.alert(i18n.t('dataCleared'), i18n.t('dataClearedMessage')) },
       ]
     );
   };
 
   const handleAbout = () => {
-    Alert.alert('حول التطبيق', 'تطبيق اللياقة البدنية\nالإصدار 1.0.0\nتم التطوير بواسطة فريق التطوير');
+    Alert.alert(i18n.t('aboutAlert'), i18n.t('aboutMessage'));
   };
 
   const settingsData: SettingItem[] = [
     {
       id: 'notifications',
-      title: 'الإشعارات',
-      subtitle: 'استقبال إشعارات التذكير بالتمارين',
+      title: i18n.t('notifications'),
+      subtitle: i18n.t('notificationsSubtitle'),
       type: 'toggle',
       value: notifications,
       onToggle: setNotifications,
     },
     {
       id: 'darkMode',
-      title: 'الوضع المظلم',
-      subtitle: 'تفعيل المظهر المظلم للتطبيق',
+      title: i18n.t('darkMode'),
+      subtitle: i18n.t('darkModeSubtitle'),
       type: 'toggle',
       value: darkMode,
       onToggle: setDarkMode,
     },
     {
       id: 'sound',
-      title: 'الأصوات',
-      subtitle: 'تفعيل الأصوات أثناء التمرين',
+      title: i18n.t('sounds'),
+      subtitle: i18n.t('soundsSubtitle'),
       type: 'toggle',
       value: soundEnabled,
       onToggle: setSoundEnabled,
     },
     {
       id: 'autoSave',
-      title: 'الحفظ التلقائي',
-      subtitle: 'حفظ البيانات تلقائياً',
+      title: i18n.t('autoSave'),
+      subtitle: i18n.t('autoSaveSubtitle'),
       type: 'toggle',
       value: autoSave,
       onToggle: setAutoSave,
     },
     {
+      id: 'language',
+      title: i18n.t('language'),
+      type: 'button',
+      onPress: () => {
+        Alert.alert(
+          i18n.t('language'),
+          '',
+          [
+            { text: i18n.t('english'), onPress: () => handleLanguageChange('en') },
+            { text: i18n.t('arabic'), onPress: () => handleLanguageChange('ar') },
+            { text: i18n.t('cancel'), style: 'cancel' },
+          ],
+          { cancelable: true }
+        );
+      },
+    },
+    {
       id: 'export',
-      title: 'تصدير البيانات',
-      subtitle: 'تصدير جميع بياناتك إلى ملف',
+      title: i18n.t('exportData'),
+      subtitle: i18n.t('exportDataSubtitle'),
       type: 'button',
       onPress: handleExportData,
     },
     {
       id: 'backup',
-      title: 'نسخ احتياطي',
-      subtitle: 'إنشاء نسخة احتياطية من البيانات',
+      title: i18n.t('backup'),
+      subtitle: i18n.t('backupSubtitle'),
       type: 'button',
       onPress: handleBackupData,
     },
     {
       id: 'clear',
-      title: 'مسح البيانات',
-      subtitle: 'حذف جميع البيانات المحفوظة',
+      title: i18n.t('clearData'),
+      subtitle: i18n.t('clearDataSubtitle'),
       type: 'button',
       onPress: handleClearData,
     },
     {
       id: 'about',
-      title: 'حول التطبيق',
-      subtitle: 'معلومات عن التطبيق والمطورين',
+      title: i18n.t('about'),
+      subtitle: i18n.t('aboutSubtitle'),
       type: 'button',
       onPress: handleAbout,
     },
@@ -139,7 +169,7 @@ export default function SettingsScreen() {
           style={[styles.button, { borderColor: colors.tint }]}
           onPress={item.onPress}
         >
-          <Text style={[styles.buttonText, { color: colors.tint }]}>فتح</Text>
+          <Text style={[styles.buttonText, { color: colors.tint }]}>{i18n.t('open')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -148,23 +178,23 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>الإعدادات</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{i18n.t('settingsTitle')}</Text>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarHeight }]}>
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>التفضيلات العامة</Text>
-          {settingsData.slice(0, 4).map(renderSettingItem)}
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{i18n.t('generalPreferences')}</Text>
+          {settingsData.slice(0, 5).map(renderSettingItem)}
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>إدارة البيانات</Text>
-          {settingsData.slice(4, 7).map(renderSettingItem)}
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{i18n.t('dataManagement')}</Text>
+          {settingsData.slice(5, 8).map(renderSettingItem)}
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>معلومات التطبيق</Text>
-          {settingsData.slice(7).map(renderSettingItem)}
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{i18n.t('appInfo')}</Text>
+          {settingsData.slice(8).map(renderSettingItem)}
         </View>
 
         <View style={styles.footer}>
@@ -192,8 +222,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   content: {
-    flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   section: {
     marginBottom: 30,

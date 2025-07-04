@@ -1,0 +1,41 @@
+{
+  "admin": "Admin",
+  "users": "Users",
+  "progress": "Progress",
+  "workouts": "Workouts",
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "workout": {
+    "change": "Change",
+    "description": "Description",
+    "alternatives": "Alternatives",
+    "change_exercise": "Change Exercise",
+    "select_alternative": "Select an Alternative",
+    "cancel": "Cancel",
+    "startWorkoutWarningTitle": "Start Workout",
+    "startWorkoutWarningMessage": "Are you sure you want to start the workout? You will not be able to change exercises once you begin.",
+    "confirm": "Confirm",
+    "watchVideo": "Watch Video"
+  },
+  "startWorkout": "Start Workout",
+  "changeExercise": "Change Exercise",
+  "warningMessage": "When you start the workout you will not be able to change exercises, make sure the equipment is available",
+  "understand": "I Understand",
+  "addNote": "Add note...",
+  "exerciseInsights": "Exercise Insights",
+  "performanceStats": "Performance Stats",
+  "highestWeight": "Highest Weight",
+  "highestReps": "Highest Reps",
+  "averageWeight": "Average Weight",
+  "averageReps": "Average Reps",
+  "totalSessions": "Total Sessions",
+  "bestPerformance": "Best Performance",
+  "personalRecord": "Personal Record",
+  "recentActivity": "Recent Activity",
+  "lastPerformed": "Last Performed",
+  "reps": "reps"
+} 

@@ -12,11 +12,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { workoutData, WorkoutDay } from '@/constants/workoutData';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import i18n from '@/localization';
 
 export default function WorkoutScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const [selectedWeek, setSelectedWeek] = useState(1);
+  const tabBarHeight = useBottomTabBarHeight();
 
   const handleWeekChange = (weekNumber: number) => {
     setSelectedWeek(weekNumber);
@@ -36,7 +39,7 @@ export default function WorkoutScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Week Selector */}
       <View style={styles.weekSelectorContainer}>
-        <Text style={[styles.title, { color: colors.text }]}>برنامج التمارين</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{i18n.t('workoutProgram')}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selectorContent}>
           {workoutData.map((week) => (
             <TouchableOpacity
@@ -51,14 +54,14 @@ export default function WorkoutScreen() {
                 styles.selectorButtonText,
                 { color: selectedWeek === week.weekNumber ? '#fff' : colors.text }
               ]}>
-                الأسبوع {week.weekNumber}
+                {i18n.t('week')} {week.weekNumber}
               </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
       
-      <ScrollView contentContainerStyle={styles.daysListContainer}>
+      <ScrollView contentContainerStyle={[styles.daysListContainer, { paddingBottom: tabBarHeight + 20 }]}>
         {workoutData[selectedWeek - 1].days.map((day) => (
           <TouchableOpacity 
             key={day.id} 
@@ -69,10 +72,13 @@ export default function WorkoutScreen() {
                 <View style={styles.dayInfo}>
                     <Text style={[styles.dayTitle, { color: colors.text }]}>{day.name}</Text>
                     <Text style={[styles.daySubtitle, { color: colors.text + '90' }]}>
-                        {day.exercises.length} تمارين
+                        {day.exercises.length} {i18n.t('exercises')}
                     </Text>
                 </View>
-                <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text} />
+                <View style={styles.dayActions}>
+                    <MaterialCommunityIcons name={day.icon as any} size={28} color={colors.tint} />
+                    <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text} />
+                </View>
             </View>
           </TouchableOpacity>
         ))}
@@ -113,7 +119,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   daysListContainer: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
     gap: 15,
   },
   dayCard: {
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dayInfo: {
-    // No specific styles needed here
+    flex: 1,
   },
   dayTitle: {
     fontSize: 18,
@@ -137,5 +144,10 @@ const styles = StyleSheet.create({
   daySubtitle: {
     fontSize: 14,
     opacity: 0.8,
+  },
+  dayActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   }
 }); 

@@ -7,11 +7,13 @@ export interface Exercise {
   rest: string;
   icon?: string; // Icon name from an icon library
   videoId?: string; // YouTube video ID
+  notes?: string; // User notes for the exercise
 }
 
 export interface WorkoutDay {
   id: string;
   name: string;
+  icon: string;
   exercises: Exercise[];
 }
 
@@ -25,6 +27,7 @@ const workoutPlan: WorkoutDay[] = [
   {
     id: 'day1',
     name: 'اليوم الأول (دفع)',
+    icon: 'weight-lifter',
     exercises: [
       { id: 'ex1', name: 'SMITH MACHINE INCLINE PRESS', muscle: 'صدر علوي', sets: 3, reps: '7-10', rest: '60-120 ثانية', icon: 'chest', videoId: 'VM5j6C3nB6s' },
       { id: 'ex2', name: 'CHEST PRESS MACHINE', muscle: 'صدر مستوي', sets: 3, reps: '7-10', rest: '60-120 ثانية', icon: 'chest', videoId: 'kG_4_J3OKG8' },
@@ -38,6 +41,7 @@ const workoutPlan: WorkoutDay[] = [
   {
     id: 'day2',
     name: 'اليوم الثاني (سحب)',
+    icon: 'rowing',
     exercises: [
       { id: 'ex7', name: 'NORMAL GRIP PULLDOWNS', muscle: 'سحب راسي ظهر', sets: 3, reps: '10-15', rest: '60-90 ثانية', icon: 'back', videoId: 'C8d5DId6w_A' },
       { id: 'ex8', name: 'BARBELL ROW', muscle: 'سحب افقي ظهر', sets: 3, reps: '10-15', rest: '60-120 ثانية', icon: 'back', videoId: 'vT2GjY_Umpw' },
@@ -51,6 +55,7 @@ const workoutPlan: WorkoutDay[] = [
   {
     id: 'day3',
     name: 'اليوم الثالث (ارجل- كتف جانبي)',
+    icon: 'run',
     exercises: [
       { id: 'ex13', name: 'LATERAL RAISE DUMBBELL', muscle: 'اكتاف جانبي', sets: 3, reps: '10-15', rest: '60-90 ثانية', icon: 'shoulders', videoId: '3VcKaXpzqRo' },
       { id: 'ex14', name: 'LEG EXTENSION', muscle: 'رجلين امامي', sets: 3, reps: '10-15', rest: '60-120 ثانية', icon: 'legs', videoId: 'YyvSfVjQeL0' },
@@ -64,6 +69,7 @@ const workoutPlan: WorkoutDay[] = [
   {
     id: 'day4',
     name: 'اليوم الرابع (علوي)',
+    icon: 'arm-flex',
     exercises: [
       { id: 'ex19', name: 'INCLINE DB PRESS', muscle: 'صدر علوي', sets: 4, reps: '8-12', rest: '60-120 ثانية', icon: 'chest', videoId: '8iPEnn-imC8' },
       { id: 'ex20', name: 'INCLINE HUMMER PRESS', muscle: 'صدر علوي', sets: 4, reps: '8-12', rest: '60-120 ثانية', icon: 'chest', videoId: '68J-f88e_v4' },
@@ -77,6 +83,7 @@ const workoutPlan: WorkoutDay[] = [
   {
     id: 'day5',
     name: 'اليوم الخامس (سفلي - كتف جانبي)',
+    icon: 'google-fit',
     exercises: [
       { id: 'ex25', name: 'LEANING CABLE LATERAL RAISE', muscle: 'اكتاف جانبي', sets: 4, reps: '10-15', rest: '60-120 ثانية', icon: 'shoulders', videoId: 'p11j3vQaGfA' },
       { id: 'ex26', name: 'LEG PRESS', muscle: 'افخاذ امامية', sets: 3, reps: '8-12', rest: '60-90 ثانية', icon: 'legs', videoId: 'IZxyso_U_zM' },
